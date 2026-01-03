@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import HomeScreen from "../screens/HomeScreen";
+import DiseaseHome from "../screens/DiseaseHome";
 import ResultScreen from "../screens/ResultScreen";
 import RemedyScreen from "../screens/RemedyScreen";
 
@@ -14,7 +14,7 @@ export default function AppNavigator() {
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
-          component={HomeScreen}
+          component={DiseaseHome}
           options={{ title: "Betel Leaf Detection" }}
         />
         <Stack.Screen

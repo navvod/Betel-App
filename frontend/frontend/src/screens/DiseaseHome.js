@@ -12,7 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { API_BASE } from "../config/config";
 import { SafeAreaView } from "react-native-safe-area-context";
-export default function HomeScreen({ navigation }) {
+export default function DiseaseHome({ navigation }) {
   const [image, setImage] = useState(null);
 
   // 📷 Camera
