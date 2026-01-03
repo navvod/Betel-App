@@ -5,15 +5,15 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
+  ScrollView,
   Animated,
   Share,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 export default function ResultScreen({ route, navigation }) {
-  const { image, disease, confidence, severity, remedy } = route.params;
-
+  const { image, disease, confidence, severity, remedy } = route.params || {};
+  const severityLevel = severity?.split("/")?.[1] || "unknown";
   // Convert confidence to percentage
   const confidencePercent = (confidence * 100).toFixed(2);
 
@@ -37,10 +37,11 @@ export default function ResultScreen({ route, navigation }) {
 
   // Severity color
   const getSeverityColor = () => {
-    if (severity === "mild") return "#2ECC71";
-    if (severity === "moderate") return "#F1C40F";
-    return "#E74C3C";
-  };
+  if (severityLevel === "early") return "#2ECC71";
+  if (severityLevel === "moderate") return "#F1C40F";
+  if (severityLevel === "severe") return "#E74C3C";
+  return "#95A5A6";
+};
 
   // Share report
   const shareReport = async () => {
@@ -49,14 +50,14 @@ export default function ResultScreen({ route, navigation }) {
 
 Disease    : ${disease}
 Confidence : ${confidencePercent}%
-Severity   : ${severity.toUpperCase()}
+Severity   : ${severityLevel.toUpperCase()};
 
-Recommended Remedy:
-${remedy}
-    `;
 
-    await Share.share({ message: report });
-  };
+  `;
+
+  await Share.share({ message: report });
+};
+
 
   // Animated width
   const animatedWidth = progressAnim.interpolate({
@@ -68,7 +69,11 @@ ${remedy}
     <SafeAreaView style={styles.container}>
       {/* Image */}
       <Image source={{ uri: image }} style={styles.image} />
-
+      {/* Scrollable content */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 40 }}
+      >
       {/* Card */}
       <View style={styles.card}>
         {/* Highlighted Disease */}
@@ -110,13 +115,24 @@ ${remedy}
           ]}
         >
           <Text style={styles.severityText}>
-            {severity.toUpperCase()}
+            {severityLevel.toUpperCase()}
           </Text>
-        </View>
-
-        {/* Remedy */}
-        <Text style={styles.label}>Recommended Remedy</Text>
-        <Text style={styles.remedy}>{remedy}</Text>
+        </View>   
+          {/* 👉 View Remedy Button */}
+          <TouchableOpacity
+            style={styles.remedyBtn}
+            onPress={() =>
+              navigation.navigate("Remedy", {
+                image, 
+                disease,
+                severityLevel,
+                remedy,
+              })
+            }
+          >
+            <Ionicons name="medkit-outline" size={20} color="#fff" />
+            <Text style={styles.remedyBtnText}>View Treatment & Remedies</Text>
+          </TouchableOpacity>
 
         {/* Share Report */}
         <TouchableOpacity
@@ -140,6 +156,7 @@ ${remedy}
           <Text style={styles.scanText}>Scan Again</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -153,7 +170,7 @@ const styles = StyleSheet.create({
 
   image: {
     width: "100%",
-    height: 270,
+    height: 200,
   },
 
   card: {
@@ -225,11 +242,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  remedy: {
+  remedyBtn: {
+    flexDirection: "row",
+    backgroundColor: "#145A32",
+    padding: 14,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 18,
+  },
+
+  remedyBtnText: {
+    color: "#fff",
     fontSize: 15,
-    color: "#2C3E50",
-    marginTop: 6,
-    lineHeight: 22,
+    fontWeight: "bold",
+    marginLeft: 8,
   },
 
   shareBtn: {
