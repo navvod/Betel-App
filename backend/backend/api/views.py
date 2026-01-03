@@ -5,6 +5,7 @@ from django.core.files.base import ContentFile
 from datetime import datetime
 import uuid
 import os
+import json
 
 from .mongo import predictions_collection
 from .ml.disease_predict import predict_disease
@@ -59,13 +60,10 @@ def history(request):
 @csrf_exempt
 def upload_image(request):
     try:
-        print("🔥 upload_image CALLED")
-
         if request.method != "POST" or "image" not in request.FILES:
             return JsonResponse({"error": "Image not provided"}, status=400)
 
         image = request.FILES["image"]
-        print("🖼 Image received:", image.name)
 
         filename = f"{uuid.uuid4()}_{image.name}"
         saved_path = default_storage.save(
@@ -75,31 +73,20 @@ def upload_image(request):
 
         full_image_path = os.path.join("media", saved_path)
 
-        # 🔬 1️⃣ Disease + Confidence
+        # 1️⃣ Disease
         disease, confidence = predict_disease(full_image_path)
 
-        # 🔥 2️⃣ Severity
-        severity = predict_severity(full_image_path)
+        # 2️⃣ Severity
+        severity, severity_conf = predict_severity(full_image_path)
 
-        # 🔥 2️⃣ Severity
-        severity = predict_severity(full_image_path)
-
-        # 💊 3️⃣ Remedy
-        remedy = get_remedy(disease, severity)
-
-        # 💾 Save
-        predictions_collection.insert_one({
-            "disease": disease,
-            "confidence": float(confidence),
-            "severity": severity,
-            "remedy": remedy,
-            "created_at": datetime.utcnow()
-        })
+        # 3️⃣ Remedy (18-class compatible)
+        remedy = get_remedy(severity)
 
         return JsonResponse({
             "disease": disease,
             "confidence": float(confidence),
             "severity": severity,
+            "severity_confidence": float(severity_conf),
             "remedy": remedy
         })
 
