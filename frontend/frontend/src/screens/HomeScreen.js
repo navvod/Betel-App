@@ -5,13 +5,13 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
+  
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { API_BASE } from "../config/config";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 export default function HomeScreen({ navigation }) {
   const [image, setImage] = useState(null);
 
@@ -59,7 +59,9 @@ export default function HomeScreen({ navigation }) {
         body: formData,
       });
 
-      const data = await response.json();
+      const text = await response.text();
+      console.log("🔵 RAW RESPONSE:", text);
+      const data = JSON.parse(text);
 
       navigation.navigate("Result", {
         image,
@@ -69,7 +71,8 @@ export default function HomeScreen({ navigation }) {
         remedy: data.remedy,
       });
     } catch (error) {
-      alert("Prediction failed");
+    console.log("❌ Prediction error:", error);
+    alert(error.message || "Prediction failed");
     }
   };
 
