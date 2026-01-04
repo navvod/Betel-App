@@ -13,6 +13,7 @@ import QualityPriceScreen from "../screens/QualityPriceScreen";
 import VarietyCommercialScreen from "../screens/VarietyCommercialScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import QualityScreen from "../screens/QualityScreen";
+import QualityResultScreen from "../screens/QualityResultScreen";
 import PriceScreen from "../screens/PriceScreen";
 import VarietyScreen from "../screens/VarietyScreen";
 import CommercialScreen from "../screens/CommercialScreen";
@@ -55,6 +56,11 @@ function QualityPriceStackNavigator() {
         name="QualityScreen"
         component={QualityScreen}
         options={{ title: "Quality Check" }}
+      />
+      <QualityPriceStack.Screen
+        name="QualityResultScreen"
+        component={QualityResultScreen}
+        options={{ title: "Quality Result" }}
       />
       <QualityPriceStack.Screen
         name="PriceScreen"

@@ -6,4 +6,5 @@ urlpatterns = [
     path("save/", views.save_prediction),
     path("history/", views.history),
     path("upload/", views.upload_image),
+    path("check-quality/", views.check_quality),
 ]

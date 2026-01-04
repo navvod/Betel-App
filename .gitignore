@@ -18,3 +18,5 @@ android/app/build/
 # OS
 .DS_Store
 Thumbs.db
+backend/backend/media/
+backend/backend/api/ml/quality.h5
