@@ -7,4 +7,5 @@ urlpatterns = [
     path("history/", views.history),
     path("upload/", views.upload_image),
     path("check-quality/", views.check_quality),
+    path("check-commercial/", views.check_commercial),
 ]
