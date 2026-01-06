@@ -88,19 +88,19 @@ Prevention:
           </View>
 
           {/* 🌱 Cultural */}
-          <Text style={[styles.section, { color: "#27AE60" }]}>🌱 Cultural Practices</Text>
+          <Text style={[styles.section, { color: "#27AE60" }]}>🌱 සාම්ප්‍රදායික වගා ක්‍රම</Text>
           {remedy?.cultural?.map((i, idx) => (
             <Text key={idx} style={styles.text}>• {i}</Text>
           ))}
 
           {/* 🧪 Scientific */}
-          <Text style={[styles.section, { color: "#2980B9" }]}>🧪 Scientific Control</Text>
+          <Text style={[styles.section, { color: "#2980B9" }]}>🧪 විද්‍යාත්මක පාලන ක්‍රම</Text>
           {remedy?.scientific?.map((i, idx) => (
             <Text key={idx} style={styles.text}>• {i}</Text>
           ))}
 
           {/* 🛡 Prevention */}
-          <Text style={[styles.section, { color: "#E67E22" }]}>🛡 Prevention</Text>
+          <Text style={[styles.section, { color: "#E67E22" }]}>🛡 වැළැක්වීමේ ක්‍රම</Text>
           {remedy?.prevention?.map((i, idx) => (
             <Text key={idx} style={styles.text}>• {i}</Text>
           ))}
