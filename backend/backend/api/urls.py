@@ -8,4 +8,5 @@ urlpatterns = [
     path("upload/", views.upload_image),
     path("check-quality/", views.check_quality),
     path("check-commercial/", views.check_commercial),
+    path("check-variety/", views.check_variety),
 ]

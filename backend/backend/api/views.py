@@ -13,6 +13,7 @@ from .ml.severity_predict import predict_severity
 from .ml.remedy import get_remedy
 from .ml.quality_predict import predict_quality
 from .ml.commercial_predict import predict_commercial
+from .ml.variety_predict import predict_variety
 
 
 from django.conf import settings
@@ -133,6 +134,43 @@ def check_commercial(request):
     except Exception as e:
         print("🔥 COMMERCIAL CHECK ERROR:", e)
         return JsonResponse({"error": str(e)}, status=500)
+
+@csrf_exempt
+def check_variety(request):
+    try:
+        if request.method != "POST" or "image" not in request.FILES:
+            return JsonResponse({"error": "Image not provided"}, status=400)
+
+        image = request.FILES["image"]
+
+        filename = f"{uuid.uuid4()}_{image.name}"
+        saved_path = default_storage.save(
+            f"uploads/{filename}",
+            ContentFile(image.read())
+        )
+
+        full_image_path = os.path.normpath(os.path.join(settings.MEDIA_ROOT, saved_path))
+        print(f"📷 Processing Image at: {full_image_path}")
+
+        if not os.path.exists(full_image_path):
+            return JsonResponse({"error": f"File not found at {full_image_path}"}, status=500)
+
+        file_size = os.path.getsize(full_image_path)
+        print(f"📷 File size: {file_size} bytes")
+        if file_size == 0:
+            return JsonResponse({"error": "Uploaded file is empty"}, status=400)
+
+        variety_type, confidence = predict_variety(full_image_path)
+
+        return JsonResponse({
+            "type": variety_type,
+            "confidence": float(confidence)
+        })
+
+    except Exception as e:
+        print("🔥 VARIETY CHECK ERROR:", e)
+        return JsonResponse({"error": str(e)}, status=500)
+
 @csrf_exempt
 def check_quality(request):
     try:

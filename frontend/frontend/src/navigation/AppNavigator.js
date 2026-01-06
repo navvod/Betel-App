@@ -18,6 +18,7 @@ import PriceScreen from "../screens/PriceScreen";
 import VarietyScreen from "../screens/VarietyScreen";
 import CommercialScreen from "../screens/CommercialScreen";
 import CommercialResultScreen from "../screens/CommercialResultScreen";
+import VarietyResultScreen from "../screens/VarietyResultScreen";
 
 const DiseaseStack = createNativeStackNavigator();
 function DiseaseStackNavigator() {
@@ -84,6 +85,11 @@ function VarietyCommercialStackNavigator() {
         name="VarietyScreen"
         component={VarietyScreen}
         options={{ title: "Betel Variety" }}
+      />
+      <VarietyCommercialStack.Screen
+        name="VarietyResultScreen"
+        component={VarietyResultScreen}
+        options={{ title: "Variety Result" }}
       />
       <VarietyCommercialStack.Screen
         name="CommercialScreen"
