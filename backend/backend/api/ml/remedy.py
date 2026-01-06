@@ -1,5 +1,5 @@
 # -------------------------------------------------
-# Betel Leaf Disease Remedies (Severity-based)
+# Betel Leaf Disease Remedies (Severity-based) – Sinhala
 # -------------------------------------------------
 
 REMEDY_DATA = {
@@ -7,48 +7,45 @@ REMEDY_DATA = {
     "Bacterial_Leaf_Blight": {
         "early": {
             "warning_level": "LOW",
-            
             "cultural": [
-                "Remove and destroy infected leaves",
-                "Avoid overhead irrigation",
-                "Improve field drainage"
+                "ආසාදිත කොළ ඉවත් කර විනාශ කරන්න",
+                "ඉහළින් ජලය වැටෙන ලෙස ජලසම්පාදනය නොකරන්න",
+                "වගා භූමියේ ජල නිකාසය වර්ධනය කරන්න"
             ],
             "scientific": [
-                "Spray copper oxychloride (2–2.5 g per liter of water)"
+                "තඹ ඔක්සික්ලෝරයිඩ් (ලීටරයකට ග්‍රෑම් 2–2.5) ද්‍රාවණයක් ස්ප්‍රේ කරන්න"
             ],
             "prevention": [
-                "Use disease-free planting material",
-                "Disinfect cutting tools regularly",
-                "Avoid water stagnation"
+                "රෝග රහිත වගා ද්‍රව්‍ය භාවිතා කරන්න",
+                "කපන උපකරණ නිතර විෂබීජ නාශනය කරන්න",
+                "ජලය එකතුවීමට ඉඩ නොදෙන්න"
             ]
         },
         "moderate": {
             "warning_level": "MEDIUM",
-            
             "cultural": [
-                "Prune infected branches",
-                "Increase plant spacing"
+                "ආසාදිත ශාඛා කප්පාදු කරන්න",
+                "වගා අතර දුර වැඩි කරන්න"
             ],
             "scientific": [
-                "Apply copper-based bactericide every 7–10 days"
+                "දින 7–10 කට වරක් තඹ අඩංගු බැක්ටීරියා නාශක භාවිතා කරන්න"
             ],
             "prevention": [
-                "Monitor plants weekly",
-                "Avoid splashing water on leaves"
+                "සතිපතා වගාව නිරීක්ෂණය කරන්න",
+                "කොළ මත ජලය වැටීමෙන් වලකින්න"
             ]
         },
         "severe": {
             "warning_level": "HIGH",
-            
             "cultural": [
-                "Remove and destroy heavily infected plants"
+                "බරපතළ ලෙස ආසාදිත පැළ ඉවත් කර විනාශ කරන්න"
             ],
             "scientific": [
-                "Apply recommended bactericides under agricultural officer guidance"
+                "කෘෂිකර්ම නිලධාරියෙකුගේ උපදෙස් අනුව බැක්ටීරියා නාශක භාවිතා කරන්න"
             ],
             "prevention": [
-                "Crop rotation",
-                "Soil sterilization before replanting"
+                "වගා මාරුව (Crop rotation) සිදු කරන්න",
+                "නැවත වගා කිරීමට පෙර මැටි විෂබීජ නාශනය කරන්න"
             ]
         }
     },
@@ -56,45 +53,42 @@ REMEDY_DATA = {
     "Fungal_Brown_Spot": {
         "early": {
             "warning_level": "LOW",
-            
             "cultural": [
-                "Remove infected leaves",
-                "Reduce leaf wetness"
+                "ආසාදිත කොළ ඉවත් කරන්න",
+                "කොළ තෙත් වීම අඩු කරන්න"
             ],
             "scientific": [
-                "Spray neem oil or mancozeb (2 g per liter)"
+                "නීම් තෙල් හෝ මැන්කොසෙබ් (ලීටරයකට ග්‍රෑම් 2) ස්ප්‍රේ කරන්න"
             ],
             "prevention": [
-                "Maintain field hygiene",
-                "Ensure good air circulation"
+                "වගා පරිසරය පිරිසිදුව තබාගන්න",
+                "හොඳ වායු සංසරණයක් පවත්වාගන්න"
             ]
         },
         "moderate": {
             "warning_level": "MEDIUM",
-            
             "cultural": [
-                "Prune affected areas"
+                "ආසාදිත කොටස් කප්පාදු කරන්න"
             ],
             "scientific": [
-                "Apply systemic fungicide at 10-day intervals"
+                "දින 10 කට වරක් පද්ධතිගත ෆංගස් නාශක භාවිතා කරන්න"
             ],
             "prevention": [
-                "Improve drainage",
-                "Avoid dense planting"
+                "ජල නිකාසය වැඩි දියුණු කරන්න",
+                "ඝන වගාවෙන් වලකින්න"
             ]
         },
         "severe": {
             "warning_level": "HIGH",
-            
             "cultural": [
-                "Destroy infected plants"
+                "ආසාදිත පැළ සම්පූර්ණයෙන් ඉවත් කර විනාශ කරන්න"
             ],
             "scientific": [
-                "Use systemic fungicides under expert supervision"
+                "විශේෂඥ උපදෙස් අනුව ෆංගස් නාශක භාවිතා කරන්න"
             ],
             "prevention": [
-                "Use resistant varieties",
-                "Practice crop rotation"
+                "රෝග ප්‍රතිරෝධී වර්ග භාවිතා කරන්න",
+                "වගා මාරුව සිදු කරන්න"
             ]
         }
     },
@@ -102,131 +96,42 @@ REMEDY_DATA = {
     "Leaf_Spot": {
         "early": {
             "warning_level": "LOW",
-            
             "cultural": [
-                "Remove affected leaves",
-                "Clean fallen debris"
+                "ආසාදිත කොළ ඉවත් කරන්න",
+                "වැටුණු කොළ සහ අපද්‍රව්‍ය පිරිසිදු කරන්න"
             ],
             "scientific": [
-                "Apply neem oil spray weekly"
+                "සතියකට වරක් නීම් තෙල් ස්ප්‍රේ කරන්න"
             ],
             "prevention": [
-                "Improve air circulation",
-                "Avoid excess moisture"
+                "වායු සංසරණය වැඩි කරන්න",
+                "අතිරික්ත තෙතමනයෙන් වලකින්න"
             ]
         },
         "moderate": {
             "warning_level": "MEDIUM",
-            
             "cultural": [
-                "Prune infected leaves"
+                "ආසාදිත කොළ කප්පාදු කරන්න"
             ],
             "scientific": [
-                "Apply fungicides like chlorothalonil"
+                "ක්ලොරෝතාලොනීල් වැනි ෆංගස් නාශක භාවිතා කරන්න"
             ],
             "prevention": [
-                "Reduce irrigation frequency",
-                "Monitor plant health"
+                "ජලසම්පාදනය අඩු කරන්න",
+                "පැළ සෞඛ්‍ය නිරීක්ෂණය කරන්න"
             ]
         },
         "severe": {
             "warning_level": "HIGH",
-            
             "cultural": [
-                "Remove and destroy infected plants"
+                "ආසාදිත පැළ ඉවත් කර විනාශ කරන්න"
             ],
             "scientific": [
-                "Apply systemic fungicide as recommended"
+                "නිර්දේශිත පද්ධතිගත ෆංගස් නාශක භාවිතා කරන්න"
             ],
             "prevention": [
-                "Soil treatment",
-                "Crop rotation"
-            ]
-        }
-    },
-
-    "Kalamadiri_Haniya": {
-        "early": {
-            "warning_level": "LOW",
-            
-            "cultural": [
-                "Improve soil drainage",
-                "Remove early infected spots"
-            ],
-            "scientific": [
-                "Apply bio-fungicides"
-            ],
-            "prevention": [
-                "Maintain clean field conditions"
-            ]
-        },
-        "moderate": {
-            "warning_level": "MEDIUM",
-            
-            "cultural": [
-                "Remove infected leaves"
-            ],
-            "scientific": [
-                "Apply recommended fungicides"
-            ],
-            "prevention": [
-                "Avoid water stagnation"
-            ]
-        },
-        "severe": {
-            "warning_level": "HIGH",
-            
-            "cultural": [
-                "Remove infected plants completely"
-            ],
-            "scientific": [
-                "Chemical fungicides under expert advice"
-            ],
-            "prevention": [
-                "Soil disinfection before next crop"
-            ]
-        }
-    },
-
-    "Red_Spider_Mite": {
-        "early": {
-            "warning_level": "LOW",
-            
-            "cultural": [
-                "Wash leaves with water",
-                "Increase humidity"
-            ],
-            "scientific": [
-                "Spray neem oil or soap solution"
-            ],
-            "prevention": [
-                "Inspect underside of leaves regularly"
-            ]
-        },
-        "moderate": {
-            "warning_level": "MEDIUM",
-            
-            "cultural": [
-                "Remove infested leaves"
-            ],
-            "scientific": [
-                "Apply acaricides as recommended"
-            ],
-            "prevention": [
-                "Avoid drought stress"
-            ]
-        },
-        "severe": {
-            "warning_level": "HIGH",
-           
-            "cultural": [
-                "Isolate infected plants"
-            ],
-            "scientific": [
-                "Chemical acaricides under expert guidance"
-            ],
-            "prevention": [
-                "Prevent spread to healthy plants"
+                "මැටි ප්‍රතිකාර සිදු කරන්න",
+                "වගා මාරුව සිදු කරන්න"
             ]
         }
     },
@@ -234,49 +139,46 @@ REMEDY_DATA = {
     "Caterpillar_Damage": {
         "early": {
             "warning_level": "LOW",
-            
             "cultural": [
-                "Hand-pick caterpillars"
+                "අත්යෙන් කීටයන් ඉවත් කරන්න"
             ],
             "scientific": [
-                "Use neem extract spray"
+                "නීම් සාරය ස්ප්‍රේ කරන්න"
             ],
             "prevention": [
-                "Regular field inspection"
+                "වගාව නිතර පරීක්ෂා කරන්න"
             ]
         },
         "moderate": {
             "warning_level": "MEDIUM",
-            
             "cultural": [
-                "Use light traps",
-                "Encourage natural predators"
+                "ලයිට් ට්‍රැප් භාවිතා කරන්න",
+                "ස්වාභාවික සතුරන් වර්ධනය කරන්න"
             ],
             "scientific": [
-                "Apply Bacillus thuringiensis (Bt)"
+                "Bacillus thuringiensis (Bt) භාවිතා කරන්න"
             ],
             "prevention": [
-                "Monitor larval activity"
+                "කීට ක්‍රියාකාරීත්වය නිරීක්ෂණය කරන්න"
             ]
         },
         "severe": {
             "warning_level": "HIGH",
-            
             "cultural": [
-                "Remove severely damaged plants"
+                "බරපතළ ලෙස හානියට පත් පැළ ඉවත් කරන්න"
             ],
             "scientific": [
-                "Chemical insecticides under guidance"
+                "කෘෂිකර්ම නිලධාරියෙකුගේ උපදෙස් අනුව රසායනික කීටනාශක භාවිතා කරන්න"
             ],
             "prevention": [
-                "Prevent reinfestation"
+                "නැවත ආසාදනය වීම වැළැක්වීමට පියවර ගන්න"
             ]
         }
     }
 }
 
 # -------------------------------------------------
-# Helper (18-class compatible)
+# Helper
 # -------------------------------------------------
 def get_remedy(severity_label: str):
     disease, severity = severity_label.split("/")
