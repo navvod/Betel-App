@@ -31,13 +31,13 @@ It helps with modern cultivation practices,Betel type identification,Commercial 
   Sinhala | English
 
 ## How to Run the project
-** 1.Clone the project.** 
-** 2.Create the .env file in both frontend and backend as in the env.example.(Use ipconfig to get the ip address of your device)** 
-** 3.Run these commands in the backend** 
-  ** pip install -r requirements.txt** 
-  ** python manage.py runserver 0.0.0.0:8000** 
-** 4.Run these commands in the frontend** 
-  ** npm install** 
-  ** npm start** 
-** 5.Make Sure both devices on the same internet connection.** 
-** 6.Use Expo go to view the app.** 
+- ** 1.Clone the project.** 
+- ** 2.Create the .env file in both frontend and backend as in the env.example.(Use ipconfig to get the ip address of your device)** 
+- ** 3.Run these commands in the backend** 
+  - ** pip install -r requirements.txt** 
+  - ** python manage.py runserver 0.0.0.0:8000** 
+- ** 4.Run these commands in the frontend** 
+  - ** npm install** 
+  - ** npm start** 
+- ** 5.Make Sure both devices on the same internet connection.** 
+- ** 6.Use Expo go to view the app.** 
