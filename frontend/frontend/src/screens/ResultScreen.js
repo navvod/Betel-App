@@ -150,7 +150,7 @@ Severity   : ${severityLevel.toUpperCase()};
         {/* Scan Again */}
         <TouchableOpacity
           style={styles.scanBtn}
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.navigate("DiseaseHome")}
         >
           <Ionicons name="scan" size={22} color="#fff" />
           <Text style={styles.scanText}>Scan Again</Text>
