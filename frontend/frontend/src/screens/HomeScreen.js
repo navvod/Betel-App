@@ -3,9 +3,26 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-nati
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Speech from "expo-speech";
 
 export default function HomeScreen({ navigation }) {
   const [recent, setRecent] = useState([]);
+
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: "si-LK",
+    });
+  };
+
+  const voiceTexts = {
+    "Variety Type": "ඔබේ බුලත් කොළ වර්ගය පිලිබඳ තොරතුරු",
+    "Commercial Type": "ඔබේ බුලත් කොලයේ වාණිජ තත්වය පිලිබඳ තොරතුරු",
+    "Quality": "ඔබේ බුලත් කොලයේ තත්වය පිලිබඳ තොරතුරු",
+    "Disease": "ඔබේ වගාවට සෑදී ඇති ලෙඩ රෝගය පිලිබඳ තොරතුරු",
+    "Propagation": "ඔබේ වගාවට සෑදී ඇති ලෙඩ රෝගයේ තත්වය පිලිබඳ තොරතුරු",
+    "Price": "ඔබේ බුලත් කොලයේ අගය පිලිබඳ තොරතුරු",
+  };
+
   const features = [
     { title: "Variety Type", route: "VarietyCommercial", params: { screen: "VarietyScreen" }, icon: "leaf", type: "MaterialCommunityIcons" },
     { title: "Commercial Type", route: "VarietyCommercial", params: { screen: "CommercialScreen" }, icon: "briefcase", type: "Ionicons" },
@@ -33,9 +50,15 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.welcome}>Welcome !</Text>
           </View>
 
-          <View style={styles.grid}>
-            {features.map((f) => (
-              <TouchableOpacity key={f.title} style={styles.card} onPress={() => handlePress(f)}>
+        <View style={styles.grid}>
+          {features.map((f) => (
+            <TouchableOpacity key={f.title} style={styles.card} onPress={() => handlePress(f)}>
+                <TouchableOpacity
+                  style={styles.voiceBtn}
+                  onPress={() => speak(voiceTexts[f.title])}
+                >
+                  <Ionicons name="volume-high" size={20} color="#fff" />
+                </TouchableOpacity>
                 {f.type === "MaterialCommunityIcons" ? (
                   <MaterialCommunityIcons name={f.icon} size={32} color="#145a32" style={styles.icon} />
                 ) : (
@@ -85,6 +108,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 1,
     borderColor: "#9be7a6",
+  },
+  voiceBtn: {
+    position: "absolute",
+    top: 8,
+    left: 8,
+    backgroundColor: "#145a32",
+    borderRadius: 20,
+    padding: 6,
+    zIndex: 10,
   },
   icon: { marginBottom: 8 },
   cardTitle: { fontSize: 16, fontWeight: "800", color: "#145a32", textAlign: "center" },

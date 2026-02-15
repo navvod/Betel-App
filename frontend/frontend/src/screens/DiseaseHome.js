@@ -143,24 +143,24 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 28,
+    fontSize: 25,
     fontWeight: "bold",
     color: "#eafaf1",
-    marginTop: 8,
+    marginTop: 3,
   },
 
   subtitle: {
-    fontSize: 14,
+    fontSize: 18,
     color: "#c8f7dc",
     textAlign: "center",
-    marginTop: 4,
+    marginTop: 3,
   },
 
   card: {
     backgroundColor: "#ffffff",
     borderRadius: 16,
-    padding: 16,
-    marginTop: 20,
+    padding: 13,
+    marginTop: 12,
     elevation: 4,
   },
 
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
 
   actionText: {
     marginLeft: 12,
-    fontSize: 16,
+    fontSize: 18,
     color: "#145a32",
     fontWeight: "600",
   },
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 16,
     padding: 16,
-    marginTop: 20,
+    marginTop: 12,
     elevation: 4,
   },
 
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
 
   predictText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     marginLeft: 8,
   },

@@ -56,8 +56,10 @@ def history(request):
     for d in docs:
         history.append({
             "id": str(d["_id"]),
-            "severity": d["severity"],
-            "remedy": d["remedy"],
+            "disease": d.get("disease"),
+            "confidence": d.get("confidence"),
+            "severity": d.get("severity"),
+            "remedy": d.get("remedy"),
             "created_at": d["created_at"]
         })
 
@@ -86,6 +88,19 @@ def upload_image(request):
 
         # 3️⃣ Remedy (18-class compatible)
         remedy = get_remedy(severity)
+
+        # Save to History
+        try:
+            prediction_record = {
+                "disease": disease,
+                "confidence": float(confidence),
+                "severity": severity,
+                "remedy": remedy,
+                "created_at": datetime.utcnow()
+            }
+            predictions_collection.insert_one(prediction_record)
+        except Exception as db_err:
+            print(f"⚠️ Failed to save history: {db_err}")
 
         return JsonResponse({
             "disease": disease,
