@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
     padding: 6,
     zIndex: 10,
   },
-  icon: { marginBottom: 8 },
-  cardTitle: { fontSize: 16, fontWeight: "800", color: "#145a32", textAlign: "center" },
+  icon: { marginBottom: 12 },
+  cardTitle: { fontSize: 20, fontWeight: "800", color: "#145a32", textAlign: "center" },
   recentHeader: { marginTop: 8, marginBottom: 6, alignItems: "flex-start" },
   recentTitle: { fontSize: 24, fontWeight: "800", color: "#eafaf1" },
   recentList: { gap: 10 },
@@ -133,5 +133,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#9be7a6",
   },
-  recentCardTitle: { fontSize: 14, fontWeight: "800", color: "#145a32", textAlign: "center", paddingHorizontal: 8 },
+  recentCardTitle: { fontSize: 18, fontWeight: "800", color: "#145a32", textAlign: "center", paddingHorizontal: 8 },
 });

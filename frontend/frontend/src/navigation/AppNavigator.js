@@ -138,7 +138,7 @@ export default function AppNavigator() {
             backgroundColor: "transparent",
             borderTopWidth: 0,
             position: "absolute",
-            height: 85,
+            height: 95,
             paddingBottom: 15,
           },
           tabBarBackground: () => (
