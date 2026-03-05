@@ -12,17 +12,37 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function ResultScreen({ route, navigation }) {
-  const { image, disease, confidence, severity, remedy } = route.params || {};
+  const {
+    image,
+    diseases = [],
+    confidences = [],
+    healthy = false,
+    severity,
+    remedy,
+  } = route.params || {};
+
   const severityLevel = severity?.split("/")?.[1] || "unknown";
-  // Convert confidence to percentage
-  const confidencePercent = (confidence * 100).toFixed(2);
+
+  // Sort diseases by confidence to identify main and minor
+  const sortedIndices = confidences
+    .map((conf, index) => ({ conf, index }))
+    .sort((a, b) => b.conf - a.conf);
+
+  const mainIndex = sortedIndices.length > 0 ? sortedIndices[0].index : -1;
+  const mainDisease = mainIndex !== -1 ? diseases[mainIndex] : "Unknown";
+  const mainConfidence = mainIndex !== -1 ? confidences[mainIndex] : 0;
+  const confidencePercent = (mainConfidence * 100).toFixed(2);
+
+  const minorDiseases = sortedIndices
+    .slice(1)
+    .map((item) => ({ name: diseases[item.index], conf: item.conf }));
 
   // Animated value
   const progressAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(progressAnim, {
-      toValue: confidence,
+      toValue: mainConfidence,
       duration: 1200,
       useNativeDriver: false,
     }).start();
@@ -30,33 +50,36 @@ export default function ResultScreen({ route, navigation }) {
 
   // Confidence color (red → yellow → green)
   const getConfidenceColor = () => {
-    if (confidence < 0.4) return "#E74C3C";
-    if (confidence < 0.7) return "#F1C40F";
+    if (mainConfidence < 0.4) return "#E74C3C";
+    if (mainConfidence < 0.7) return "#F1C40F";
     return "#2ECC71";
   };
 
   // Severity color
   const getSeverityColor = () => {
-  if (severityLevel === "early") return "#2ECC71";
-  if (severityLevel === "moderate") return "#F1C40F";
-  if (severityLevel === "severe") return "#E74C3C";
-  return "#95A5A6";
-};
+    if (healthy) return "#2ECC71";
+    if (severityLevel === "early") return "#2ECC71";
+    if (severityLevel === "moderate") return "#F1C40F";
+    if (severityLevel === "severe") return "#E74C3C";
+    return "#95A5A6";
+  };
 
   // Share report
   const shareReport = async () => {
     const report = `
 🌿 Betel Leaf Disease Report
 
-Disease    : ${disease}
-Confidence : ${confidencePercent}%
-Severity   : ${severityLevel.toUpperCase()};
-
-
+${
+  healthy
+    ? "Status: Healthy Leaf"
+    : `Diseases: ${diseases.join(", ")}`
+}
+Main Confidence : ${confidencePercent}%
+Severity Level  : ${severityLevel.toUpperCase()}
   `;
 
-  await Share.share({ message: report });
-};
+    await Share.share({ message: report });
+  };
 
 
   // Animated width
@@ -78,17 +101,35 @@ Severity   : ${severityLevel.toUpperCase()};
       <View style={styles.card}>
         {/* Highlighted Disease */}
         <View style={styles.diseaseBox}>
-          <Text style={styles.diseaseLabel}>Detected Disease</Text>
-          <Text style={styles.diseaseName}>{disease}</Text>
+          <Text style={styles.diseaseLabel}>
+            {healthy ? "Status" : "ප්‍රධානථම රෝගය"}
+          </Text>
+          <Text style={styles.diseaseName}>
+            {healthy ? "Healthy Leaf" : mainDisease}
+          </Text>
         </View>
 
+        {/* Minor Diseases */}
+        {!healthy && minorDiseases.length > 0 && (
+          <View style={styles.minorSection}>
+            <Text style={styles.label}>ද්විතීය රෝග(ය)</Text>
+            {minorDiseases.map((d, i) => (
+              <View key={i} style={styles.minorItem}>
+                <Ionicons name="alert-circle-outline" size={16} color="#E67E22" />
+                <Text style={styles.minorText}>
+                  {d.name} ({(d.conf * 100).toFixed(1)}%)
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+
         {/* Confidence */}
-        <Text style={styles.label}>Confidence</Text>
+        <Text style={styles.label}>
+          {healthy ? "Confidence Score" : "Main Disease Confidence"}
+        </Text>
         <Text
-          style={[
-            styles.percent,
-            { color: getConfidenceColor() },
-          ]}
+          style={[styles.percent, { color: getConfidenceColor() }]}
         >
           {confidencePercent}%
         </Text>
@@ -106,33 +147,42 @@ Severity   : ${severityLevel.toUpperCase()};
           />
         </View>
 
-        {/* Severity */}
-        <Text style={styles.label}>Severity Level</Text>
-        <View
-          style={[
-            styles.severityBadge,
-            { backgroundColor: getSeverityColor() },
-          ]}
-        >
-          <Text style={styles.severityText}>
-            {severityLevel.toUpperCase()}
-          </Text>
-        </View>   
-          {/* 👉 View Remedy Button */}
+        {/* Severity - Only if NOT healthy */}
+        {!healthy && (
+          <>
+            <Text style={styles.label}>Severity Level (ප්‍රධානථම රෝගය)</Text>
+            <View
+              style={[
+                styles.severityBadge,
+                { backgroundColor: getSeverityColor() },
+              ]}
+            >
+              <Text style={styles.severityText}>
+                {severityLevel.toUpperCase()}
+              </Text>
+            </View>
+          </>
+        )}
+
+        {/* 👉 View Remedy Button - Only if NOT healthy */}
+        {!healthy && (
           <TouchableOpacity
             style={styles.remedyBtn}
             onPress={() =>
               navigation.navigate("Remedy", {
-                image, 
-                disease,
+                image,
+                disease: mainDisease,
                 severityLevel,
                 remedy,
               })
             }
           >
             <Ionicons name="medkit-outline" size={20} color="#fff" />
-            <Text style={styles.remedyBtnText}>View Treatment & Remedies</Text>
+            <Text style={styles.remedyBtnText}>
+              View Treatment & Remedies
+            </Text>
           </TouchableOpacity>
+        )}
 
         {/* Share Report */}
         <TouchableOpacity
@@ -227,6 +277,28 @@ const styles = StyleSheet.create({
   progressBarFill: {
     height: "100%",
     borderRadius: 10,
+  },
+
+  minorSection: {
+    marginTop: 15,
+    padding: 12,
+    backgroundColor: "#FEF5E7",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#FAD7A0",
+  },
+
+  minorItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 5,
+  },
+
+  minorText: {
+    fontSize: 16,
+    color: "#D35400",
+    marginLeft: 6,
+    fontWeight: "500",
   },
 
   severityBadge: {

@@ -5,7 +5,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
@@ -14,6 +14,7 @@ import { API_BASE } from "../config/config";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function DiseaseHome({ navigation }) {
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // 📷 Camera
   const openCamera = async () => {
@@ -46,6 +47,8 @@ export default function DiseaseHome({ navigation }) {
 
   // 🔮 Predict
   const predict = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("image", {
@@ -63,18 +66,30 @@ export default function DiseaseHome({ navigation }) {
       console.log("🔵 RAW RESPONSE:", text);
       const data = JSON.parse(text);
 
+      if (data.error || !data.is_betel) {
+        alert(data.error || "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.");
+        setImage(null);
+        setLoading(false);
+        return;
+      }
+
       navigation.navigate("Result", {
         image,
-        disease: data.disease,
-        confidence: data.confidence,
+        diseases: data.diseases || [],
+        confidences: data.confidences || [],
+        healthy: data.is_healthy || false,
         severity: data.severity,
         remedy: data.remedy,
       });
     } catch (error) {
-    console.log("❌ Prediction error:", error);
-    alert(error.message || "Prediction failed");
+      console.log("❌ Prediction error:", error);
+      alert(error.message || "Prediction failed");
+    } finally {
+      setLoading(false);
     }
   };
+
+ 
 
   return (
     <LinearGradient colors={["#0f3d2e", "#145a32"]} style={{ flex: 1 }}>
@@ -111,9 +126,19 @@ export default function DiseaseHome({ navigation }) {
           <View style={styles.previewCard}>
             <Image source={{ uri: image }} style={styles.image} />
 
-            <TouchableOpacity style={styles.predictBtn} onPress={predict}>
-              <Ionicons name="analytics" size={22} color="#fff" />
-              <Text style={styles.predictText}>Predict Disease</Text>
+            <TouchableOpacity 
+              style={[styles.predictBtn, loading && styles.disabledBtn]} 
+              onPress={predict}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <>
+                  <Ionicons name="analytics" size={22} color="#fff" />
+                  <Text style={styles.predictText}>Predict Disease</Text>
+                </>
+              )}
             </TouchableOpacity>
           </View>
         )}
@@ -208,6 +233,21 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
-    marginLeft: 8,
+    marginLeft: 10,
+  },
+
+  testBtn: {
+    flexDirection: "row",
+    backgroundColor: "#D35400",
+    padding: 14,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  disabledBtn: {
+    backgroundColor: "#7f8c8d",
+    opacity: 0.8,
   },
 });

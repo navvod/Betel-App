@@ -8,7 +8,7 @@ import os
 import json
 
 from .mongo import predictions_collection
-from .ml.disease_predict import predict_disease
+from .ml.Multi_predict import is_betel_leaf, predict_disease
 from .ml.severity_predict import predict_severity
 from .ml.remedy import get_remedy
 from .ml.quality_predict import predict_quality
@@ -56,11 +56,13 @@ def history(request):
     for d in docs:
         history.append({
             "id": str(d["_id"]),
+            "diseases": d.get("diseases"),
+            "confidences": d.get("confidences"),
             "disease": d.get("disease"),
             "confidence": d.get("confidence"),
             "severity": d.get("severity"),
             "remedy": d.get("remedy"),
-            "created_at": d["created_at"]
+            "created_at": d.get("created_at")
         })
 
     return JsonResponse(history, safe=False)
@@ -72,19 +74,33 @@ def upload_image(request):
 
         image = request.FILES["image"]
 
-        filename = f"{uuid.uuid4()}_{image.name}"
-        saved_path = default_storage.save(
-            f"uploads/{filename}",
-            ContentFile(image.read())
-        )
+        # Read once to reuse bytes
+        image_bytes = image.read()
 
-        full_image_path = os.path.join("media", saved_path)
+        # ──────────────────────────────────────────────────────────────
+        # Stage 1: Betel leaf detection
+        # ──────────────────────────────────────────────────────────────
+        is_betel, betel_conf = is_betel_leaf(image_bytes)
 
-        # 1️⃣ Disease
-        disease, confidence = predict_disease(full_image_path)
+        if not is_betel:
+            return JsonResponse({
+                "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
+                "is_betel": False,
+                "betel_confidence": betel_conf
+            })
+
+        # ──────────────────────────────────────────────────────────────
+        # Stage 2: Disease prediction (multi-label)
+        # ──────────────────────────────────────────────────────────────
+        diseases, confidences, is_healthy = predict_disease(image_bytes)
 
         # 2️⃣ Severity
-        severity, severity_conf = predict_severity(full_image_path)
+        if is_healthy:
+            severity = "Healthy/None"
+            severity_conf = 1.0
+        else:
+            # OPTIMIZATION: Pass bytes directly to severity model instead of saving/reading from disk
+            severity, severity_conf = predict_severity(image_bytes)
 
         # 3️⃣ Remedy (18-class compatible)
         remedy = get_remedy(severity)
@@ -92,10 +108,12 @@ def upload_image(request):
         # Save to History
         try:
             prediction_record = {
-                "disease": disease,
-                "confidence": float(confidence),
+                "diseases": diseases,
+                "confidences": confidences,
+                "is_healthy": is_healthy,
                 "severity": severity,
                 "remedy": remedy,
+                "betel_confidence": betel_conf,
                 "created_at": datetime.utcnow()
             }
             predictions_collection.insert_one(prediction_record)
@@ -103,8 +121,11 @@ def upload_image(request):
             print(f"⚠️ Failed to save history: {db_err}")
 
         return JsonResponse({
-            "disease": disease,
-            "confidence": float(confidence),
+            "is_betel": True,
+            "betel_confidence": betel_conf,
+            "diseases": diseases,
+            "confidences": confidences,
+            "is_healthy": is_healthy,
             "severity": severity,
             "severity_confidence": float(severity_conf),
             "remedy": remedy

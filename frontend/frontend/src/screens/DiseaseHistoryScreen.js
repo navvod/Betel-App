@@ -25,18 +25,29 @@ export default function DiseaseHistoryScreen() {
 
   const renderItem = ({ item }) => {
     // Append 'Z' to ensure it's treated as UTC if it's missing
-    const dateStr = item.created_at.endsWith("Z") ? item.created_at : item.created_at + "Z";
+    const dateStr =
+      item.created_at && item.created_at.endsWith("Z")
+        ? item.created_at
+        : (item.created_at || new Date().toISOString()) + "Z";
     const date = new Date(dateStr).toLocaleString();
+
+    const diseases = item.diseases || (item.disease ? [item.disease] : []);
+    const confidence =
+      item.confidences && item.confidences.length > 0
+        ? Math.max(...item.confidences)
+        : item.confidence || 0;
+
     return (
       <View style={styles.card}>
         <View style={styles.header}>
           <Text style={styles.date}>{date}</Text>
-          {/* <View style={[styles.badge, { backgroundColor: getSeverityColor(item.severity) }]}>
-            <Text style={styles.badgeText}>{item.severity}</Text>
-          </View> */}
         </View>
-        <Text style={styles.disease}>Disease: {item.disease || "N/A"}</Text>
-        <Text style={styles.confidence}>Confidence: {(item.confidence * 100).toFixed(2)}%</Text>
+        <Text style={styles.disease}>
+          Diseases: {diseases.join(", ") || "N/A"}
+        </Text>
+        <Text style={styles.confidence}>
+          Confidence: {(confidence * 100).toFixed(2)}%
+        </Text>
         
         {/* Handle Remedy Object Rendering */}
         {item.remedy && typeof item.remedy === 'object' ? (

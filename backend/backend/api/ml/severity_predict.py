@@ -2,6 +2,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from PIL import Image
+import io
 
 # --------------------------------------------------
 # Paths
@@ -50,8 +51,12 @@ SEVERITY_CLASSES = [
 # --------------------------------------------------
 # Preprocess (EfficientNet!)
 # --------------------------------------------------
-def preprocess(image_path):
-    img = Image.open(image_path).convert("RGB")
+def preprocess(image_input):
+    if isinstance(image_input, str):
+        img = Image.open(image_input).convert("RGB")
+    else:
+        img = Image.open(io.BytesIO(image_input)).convert("RGB")
+        
     img = img.resize((224, 224))
     img = np.array(img, dtype=np.float32)
 
@@ -64,8 +69,8 @@ def preprocess(image_path):
 # --------------------------------------------------
 # Predict severity
 # --------------------------------------------------
-def predict_severity(image_path):
-    img = preprocess(image_path)
+def predict_severity(image_input):
+    img = preprocess(image_input)
 
     interpreter.set_tensor(input_details[0]["index"], img)
     interpreter.invoke()

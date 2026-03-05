@@ -9,7 +9,7 @@ MODEL_PATH = os.path.join(
     BASE_DIR,
     "api",
     "ml",
-    "CNN_Disease.tflite"
+    "CNN_Disease_WH.tflite"
 )
 
 CLASS_NAMES = [
@@ -19,7 +19,8 @@ CLASS_NAMES = [
     "Dry",
     "Kanamadiri haniya",
     "Leaf spot",
-    "Red Spider mite Damage"
+    "Red Spider mite Damage",
+    "Healthy"
 ]
 
 # -------------------------------
