@@ -35,7 +35,7 @@ export default function CommercialScreen({ navigation }) {
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: "images",
       quality: 1,
       allowsEditing: true,
       aspect: [1, 1],
