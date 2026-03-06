@@ -13,7 +13,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function ResultScreen({ route, navigation }) {
   const { image, disease, confidence, severity, remedy } = route.params || {};
-  const severityLevel = severity?.split("/")?.[1] || "unknown";
+  // ✅ REPLACE WITH
+const severityLevel = severity?.includes("/")
+  ? severity.split("/")?.[1]
+  : severity || "unknown";
   // Convert confidence to percentage
   const confidencePercent = (confidence * 100).toFixed(2);
 
