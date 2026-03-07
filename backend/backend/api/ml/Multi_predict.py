@@ -36,37 +36,50 @@ DISEASE_THRESHOLD = 0.50
 
 def preprocess_image(image_bytes_or_path):
     """Preprocess for TFLite: 224x224, normalized float32"""
-    if isinstance(image_bytes_or_path, str):  # path
-        img = Image.open(image_bytes_or_path).convert('RGB')
-    else:  # bytes
-        img = Image.open(io.BytesIO(image_bytes_or_path)).convert('RGB')
-    
-    img = img.resize((224, 224))
-    arr = np.array(img, dtype=np.float32) / 255.0
-    arr = np.expand_dims(arr, axis=0)
-    return arr
+    try:
+        if isinstance(image_bytes_or_path, str):  # path
+            img = Image.open(image_bytes_or_path).convert('RGB')
+        else:  # bytes
+            # If it's already a BytesIO object, don't wrap it again
+            if hasattr(image_bytes_or_path, 'read'):
+                image_bytes_or_path.seek(0)
+                img = Image.open(image_bytes_or_path).convert('RGB')
+            else:
+                img = Image.open(io.BytesIO(image_bytes_or_path)).convert('RGB')
+        
+        img = img.resize((224, 224))
+        arr = np.array(img, dtype=np.float32) / 255.0
+        arr = np.expand_dims(arr, axis=0)
+        return arr
+    except Exception as e:
+        print(f"ERROR in preprocess_image: {e}")
+        raise e
 
 def is_betel_leaf(image_bytes):
     """Run detector → return (is_betel: bool, confidence: float)"""
-    input_array = preprocess_image(image_bytes)
-    detector_interpreter.set_tensor(detector_input_details[0]['index'], input_array)
-    detector_interpreter.invoke()
-    output = detector_interpreter.get_tensor(detector_output_details[0]['index'])[0]
-    
-    # Based on user feedback:
-    # Betel leaf upload → betel_confidence: 0.0001 (low)
-    # Non-betel leaf upload → betel_confidence: 0.99 (high)
-    # This means the model output is 1.0 for "Non-Betel" and 0.0 for "Betel".
-    # So we invert the probability to get "Betel" confidence.
-    
-    if len(output) == 1:
-        raw_prob = float(output[0])
-        betel_prob = 1.0 - raw_prob  # Invert for betel confidence
-    else:
-        # Assuming index 0 is betel and index 1 is non-betel
-        betel_prob = float(output[0])
+    try:
+        input_array = preprocess_image(image_bytes)
+        detector_interpreter.set_tensor(detector_input_details[0]['index'], input_array)
+        detector_interpreter.invoke()
+        output = detector_interpreter.get_tensor(detector_output_details[0]['index'])[0]
         
-    return bool(betel_prob >= BETEL_THRESHOLD), float(betel_prob)
+        print(f"DEBUG: Detector Output: {output}")
+        
+        if len(output) == 1:
+            raw_prob = float(output[0])
+            # The model returns a value that is HIGH for non-betel leaves (e.g. 0.99)
+            # and LOW for betel leaves (e.g. 0.0001).
+            # So we MUST invert it to get the "Betel Probability".
+            betel_prob = 1.0 - raw_prob 
+        else:
+            # For 2-class softmax, we'll assume index 0 is betel.
+            betel_prob = float(output[0])
+            
+        print(f"DEBUG: Calculated Betel Probability: {betel_prob}")
+        return bool(betel_prob >= BETEL_THRESHOLD), float(betel_prob)
+    except Exception as e:
+        print(f"ERROR in is_betel_leaf: {e}")
+        raise e
 
 def predict_disease(image_bytes):
     """Run multi-label disease model → return diseases list, confidences list, is_healthy bool"""
