@@ -143,11 +143,25 @@ def check_commercial(request):
             return JsonResponse({"error": "Image not provided"}, status=400)
 
         image = request.FILES["image"]
+        image_bytes = image.read()
 
+        # ──────────────────────────────────────────────────────────────
+        # Stage 1: Betel leaf detection
+        # ──────────────────────────────────────────────────────────────
+        is_betel, betel_conf = is_betel_leaf(image_bytes)
+
+        if not is_betel:
+            return JsonResponse({
+                "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
+                "is_betel": False,
+                "betel_confidence": betel_conf
+            })
+
+        # Stage 2: Save temporarily for model processing (if it requires a path)
         filename = f"{uuid.uuid4()}_{image.name}"
         saved_path = default_storage.save(
             f"uploads/{filename}",
-            ContentFile(image.read())
+            ContentFile(image_bytes)
         )
 
         full_image_path = os.path.normpath(os.path.join(settings.MEDIA_ROOT, saved_path))
@@ -185,11 +199,25 @@ def check_variety(request):
             return JsonResponse({"error": "Image not provided"}, status=400)
 
         image = request.FILES["image"]
+        image_bytes = image.read()
 
+        # ──────────────────────────────────────────────────────────────
+        # Stage 1: Betel leaf detection
+        # ──────────────────────────────────────────────────────────────
+        is_betel, betel_conf = is_betel_leaf(image_bytes)
+
+        if not is_betel:
+            return JsonResponse({
+                "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
+                "is_betel": False,
+                "betel_confidence": betel_conf
+            })
+
+        # Stage 2: Save temporarily for model processing (if it requires a path)
         filename = f"{uuid.uuid4()}_{image.name}"
         saved_path = default_storage.save(
             f"uploads/{filename}",
-            ContentFile(image.read())
+            ContentFile(image_bytes)
         )
 
         full_image_path = os.path.normpath(os.path.join(settings.MEDIA_ROOT, saved_path))
@@ -227,11 +255,25 @@ def check_quality(request):
             return JsonResponse({"error": "Image not provided"}, status=400)
 
         image = request.FILES["image"]
+        image_bytes = image.read()
 
+        # ──────────────────────────────────────────────────────────────
+        # Stage 1: Betel leaf detection
+        # ──────────────────────────────────────────────────────────────
+        is_betel, betel_conf = is_betel_leaf(image_bytes)
+
+        if not is_betel:
+            return JsonResponse({
+                "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
+                "is_betel": False,
+                "betel_confidence": betel_conf
+            })
+
+        # Stage 2: Save temporarily for model processing (if it requires a path)
         filename = f"{uuid.uuid4()}_{image.name}"
         saved_path = default_storage.save(
             f"uploads/{filename}",
-            ContentFile(image.read())
+            ContentFile(image_bytes)
         )
 
         # Use absolute path for reliability
