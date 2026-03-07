@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import { AuthContext } from "../context/AuthContext";
+import LoginScreen from "../screens/LoginScreen";
+import SignupScreen from "../screens/SignupScreen";
 import DiseaseHome from "../screens/DiseaseHome";
 import ResultScreen from "../screens/ResultScreen";
 import RemedyScreen from "../screens/RemedyScreen";
@@ -22,6 +25,17 @@ import VarietyResultScreen from "../screens/VarietyResultScreen";
 import DiseaseHistoryScreen from "../screens/DiseaseHistoryScreen";
 
 const DiseaseStack = createNativeStackNavigator();
+const AuthStack = createNativeStackNavigator();
+
+function AuthStackNavigator() {
+  return (
+    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen name="Signup" component={SignupScreen} />
+    </AuthStack.Navigator>
+  );
+}
+
 function DiseaseStackNavigator() {
   return (
     <DiseaseStack.Navigator>
@@ -126,65 +140,81 @@ function ProfileStackNavigator() {
 }
 
 const Tab = createBottomTabNavigator();
+
 export default function AppNavigator() {
+  const { isLoading, userToken } = useContext(AuthContext);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#145a32" />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarActiveTintColor: "#eafaf1",
-          tabBarInactiveTintColor: "#c8f7dc",
-          tabBarStyle: {
-            backgroundColor: "transparent",
-            borderTopWidth: 0,
-            position: "absolute",
-            height: 95,
-            paddingBottom: 15,
-          },
-          tabBarBackground: () => (
-            <LinearGradient
-              colors={["#0f3d2e", "#145a32"]}
-              style={{ flex: 1 }}
-            />
-          ),
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName = "home";
-            if (route.name === "Home") iconName = "home";
-            if (route.name === "QualityPrice") iconName = "pricetag";
-            if (route.name === "Disease") iconName = "medkit";
-            if (route.name === "VarietyCommercial") iconName = "layers";
-            if (route.name === "Profile") iconName = "person";
-            const iconSize = focused ? 30 : 22;
-            return (
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: focused ? 56 : 44,
-                  height: focused ? 56 : 44,
-                  borderRadius: 28,
-                  backgroundColor: focused ? "#1e8449" : "transparent",
-                }}
-              >
-                <Ionicons
-                  name={iconName}
-                  size={iconSize}
-                  color={focused ? "#ffffff" : color}
-                />
-              </View>
-            );
-          },
-        })}
-      >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="QualityPrice" component={QualityPriceStackNavigator} />
-        <Tab.Screen name="Disease" component={DiseaseStackNavigator} />
-        <Tab.Screen
-          name="VarietyCommercial"
-          component={VarietyCommercialStackNavigator}
-        />
-        <Tab.Screen name="Profile" component={ProfileStackNavigator} />
-      </Tab.Navigator>
+      {userToken ? (
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            headerShown: false,
+            tabBarActiveTintColor: "#eafaf1",
+            tabBarInactiveTintColor: "#c8f7dc",
+            tabBarStyle: {
+              backgroundColor: "transparent",
+              borderTopWidth: 0,
+              position: "absolute",
+              height: 95,
+              paddingBottom: 15,
+            },
+            tabBarBackground: () => (
+              <LinearGradient
+                colors={["#0f3d2e", "#145a32"]}
+                style={{ flex: 1 }}
+              />
+            ),
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName = "home";
+              if (route.name === "Home") iconName = "home";
+              if (route.name === "QualityPrice") iconName = "pricetag";
+              if (route.name === "Disease") iconName = "medkit";
+              if (route.name === "VarietyCommercial") iconName = "layers";
+              if (route.name === "Profile") iconName = "person";
+              const iconSize = focused ? 30 : 22;
+              return (
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: focused ? 56 : 44,
+                    height: focused ? 56 : 44,
+                    borderRadius: 28,
+                    backgroundColor: focused ? "#1e8449" : "transparent",
+                  }}
+                >
+                  <Ionicons
+                    name={iconName}
+                    size={iconSize}
+                    color={focused ? "#ffffff" : color}
+                  />
+                </View>
+              );
+            },
+            tabBarLabel: "",
+          })}
+        >
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="QualityPrice" component={QualityPriceStackNavigator} />
+          <Tab.Screen name="Disease" component={DiseaseStackNavigator} />
+          <Tab.Screen
+            name="VarietyCommercial"
+            component={VarietyCommercialStackNavigator}
+          />
+          <Tab.Screen name="Profile" component={ProfileStackNavigator} />
+        </Tab.Navigator>
+      ) : (
+        <AuthStackNavigator />
+      )}
     </NavigationContainer>
   );
 }
