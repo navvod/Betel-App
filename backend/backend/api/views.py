@@ -137,6 +137,7 @@ def upload_image(request):
 
 @csrf_exempt
 def check_commercial(request):
+    full_image_path = None
     try:
         if request.method != "POST" or "image" not in request.FILES:
             return JsonResponse({"error": "Image not provided"}, status=400)
@@ -170,9 +171,15 @@ def check_commercial(request):
     except Exception as e:
         print("🔥 COMMERCIAL CHECK ERROR:", e)
         return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        # 🗑️ Delete temporary file after processing
+        if full_image_path and os.path.exists(full_image_path):
+            os.remove(full_image_path)
+            print(f"🗑️ Deleted temporary file: {full_image_path}")
 
 @csrf_exempt
 def check_variety(request):
+    full_image_path = None
     try:
         if request.method != "POST" or "image" not in request.FILES:
             return JsonResponse({"error": "Image not provided"}, status=400)
@@ -206,9 +213,15 @@ def check_variety(request):
     except Exception as e:
         print("🔥 VARIETY CHECK ERROR:", e)
         return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        # 🗑️ Delete temporary file after processing
+        if full_image_path and os.path.exists(full_image_path):
+            os.remove(full_image_path)
+            print(f"🗑️ Deleted temporary file: {full_image_path}")
 
 @csrf_exempt
 def check_quality(request):
+    full_image_path = None
     try:
         if request.method != "POST" or "image" not in request.FILES:
             return JsonResponse({"error": "Image not provided"}, status=400)
@@ -245,3 +258,8 @@ def check_quality(request):
     except Exception as e:
         print("🔥 QUALITY CHECK ERROR:", e)
         return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        # 🗑️ Delete temporary file after processing
+        if full_image_path and os.path.exists(full_image_path):
+            os.remove(full_image_path)
+            print(f"🗑️ Deleted temporary file: {full_image_path}")
