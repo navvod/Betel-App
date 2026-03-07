@@ -62,7 +62,7 @@ export default function VarietyScreen({ navigation }) {
       });
       const data = await response.json();
       
-      if (response.ok) {
+      if (response.ok && !data.error) {
         // Navigate to result screen instead of setting state
         navigation.navigate("VarietyResultScreen", {
           image: image,
@@ -73,6 +73,7 @@ export default function VarietyScreen({ navigation }) {
         setImage(null);
         setResult(null);
       } else {
+        // Show the error message from the backend (like the betel leaf validation error)
         Alert.alert("Error", data.error || "Failed to check variety type");
       }
     } catch (error) {

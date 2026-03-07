@@ -76,6 +76,7 @@ def upload_image(request):
 
         # Read once to reuse bytes
         image_bytes = image.read()
+        print(f"DEBUG: Received image type: {type(image_bytes)}, length: {len(image_bytes)}")
 
         # ──────────────────────────────────────────────────────────────
         # Stage 1: Betel leaf detection
@@ -87,7 +88,7 @@ def upload_image(request):
                 "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
                 "is_betel": False,
                 "betel_confidence": betel_conf
-            })
+            }, status=400)
 
         # ──────────────────────────────────────────────────────────────
         # Stage 2: Disease prediction (multi-label)
@@ -137,16 +138,31 @@ def upload_image(request):
 
 @csrf_exempt
 def check_commercial(request):
+    full_image_path = None
     try:
         if request.method != "POST" or "image" not in request.FILES:
             return JsonResponse({"error": "Image not provided"}, status=400)
 
         image = request.FILES["image"]
+        image_bytes = image.read()
 
+        # ──────────────────────────────────────────────────────────────
+        # Stage 1: Betel leaf detection
+        # ──────────────────────────────────────────────────────────────
+        is_betel, betel_conf = is_betel_leaf(image_bytes)
+
+        if not is_betel:
+            return JsonResponse({
+                "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
+                "is_betel": False,
+                "betel_confidence": betel_conf
+            }, status=400)
+
+        # Stage 2: Save temporarily for model processing (if it requires a path)
         filename = f"{uuid.uuid4()}_{image.name}"
         saved_path = default_storage.save(
             f"uploads/{filename}",
-            ContentFile(image.read())
+            ContentFile(image_bytes)
         )
 
         full_image_path = os.path.normpath(os.path.join(settings.MEDIA_ROOT, saved_path))
@@ -170,19 +186,39 @@ def check_commercial(request):
     except Exception as e:
         print("🔥 COMMERCIAL CHECK ERROR:", e)
         return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        # 🗑️ Delete temporary file after processing
+        if full_image_path and os.path.exists(full_image_path):
+            os.remove(full_image_path)
+            print(f"🗑️ Deleted temporary file: {full_image_path}")
 
 @csrf_exempt
 def check_variety(request):
+    full_image_path = None
     try:
         if request.method != "POST" or "image" not in request.FILES:
             return JsonResponse({"error": "Image not provided"}, status=400)
 
         image = request.FILES["image"]
+        image_bytes = image.read()
 
+        # ──────────────────────────────────────────────────────────────
+        # Stage 1: Betel leaf detection
+        # ──────────────────────────────────────────────────────────────
+        is_betel, betel_conf = is_betel_leaf(image_bytes)
+
+        if not is_betel:
+            return JsonResponse({
+                "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
+                "is_betel": False,
+                "betel_confidence": betel_conf
+            }, status=400)
+
+        # Stage 2: Save temporarily for model processing (if it requires a path)
         filename = f"{uuid.uuid4()}_{image.name}"
         saved_path = default_storage.save(
             f"uploads/{filename}",
-            ContentFile(image.read())
+            ContentFile(image_bytes)
         )
 
         full_image_path = os.path.normpath(os.path.join(settings.MEDIA_ROOT, saved_path))
@@ -206,19 +242,39 @@ def check_variety(request):
     except Exception as e:
         print("🔥 VARIETY CHECK ERROR:", e)
         return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        # 🗑️ Delete temporary file after processing
+        if full_image_path and os.path.exists(full_image_path):
+            os.remove(full_image_path)
+            print(f"🗑️ Deleted temporary file: {full_image_path}")
 
 @csrf_exempt
 def check_quality(request):
+    full_image_path = None
     try:
         if request.method != "POST" or "image" not in request.FILES:
             return JsonResponse({"error": "Image not provided"}, status=400)
 
         image = request.FILES["image"]
+        image_bytes = image.read()
 
+        # ──────────────────────────────────────────────────────────────
+        # Stage 1: Betel leaf detection
+        # ──────────────────────────────────────────────────────────────
+        is_betel, betel_conf = is_betel_leaf(image_bytes)
+
+        if not is_betel:
+            return JsonResponse({
+                "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
+                "is_betel": False,
+                "betel_confidence": betel_conf
+            }, status=400)
+
+        # Stage 2: Save temporarily for model processing (if it requires a path)
         filename = f"{uuid.uuid4()}_{image.name}"
         saved_path = default_storage.save(
             f"uploads/{filename}",
-            ContentFile(image.read())
+            ContentFile(image_bytes)
         )
 
         # Use absolute path for reliability
@@ -245,3 +301,8 @@ def check_quality(request):
     except Exception as e:
         print("🔥 QUALITY CHECK ERROR:", e)
         return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        # 🗑️ Delete temporary file after processing
+        if full_image_path and os.path.exists(full_image_path):
+            os.remove(full_image_path)
+            print(f"🗑️ Deleted temporary file: {full_image_path}")

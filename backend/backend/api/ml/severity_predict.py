@@ -52,19 +52,29 @@ SEVERITY_CLASSES = [
 # Preprocess (EfficientNet!)
 # --------------------------------------------------
 def preprocess(image_input):
-    if isinstance(image_input, str):
-        img = Image.open(image_input).convert("RGB")
-    else:
-        img = Image.open(io.BytesIO(image_input)).convert("RGB")
-        
-    img = img.resize((224, 224))
-    img = np.array(img, dtype=np.float32)
+    try:
+        if isinstance(image_input, str):
+            img = Image.open(image_input).convert("RGB")
+        else:
+            # If it's already a BytesIO-like object, don't wrap it again
+            if hasattr(image_input, 'read'):
+                if hasattr(image_input, 'seek'):
+                    image_input.seek(0)
+                img = Image.open(image_input).convert("RGB")
+            else:
+                img = Image.open(io.BytesIO(image_input)).convert("RGB")
+            
+        img = img.resize((224, 224))
+        img = np.array(img, dtype=np.float32)
 
-    # EfficientNet preprocessing
-    img = tf.keras.applications.efficientnet.preprocess_input(img)
+        # EfficientNet preprocessing
+        img = tf.keras.applications.efficientnet.preprocess_input(img)
 
-    img = np.expand_dims(img, axis=0)
-    return img
+        img = np.expand_dims(img, axis=0)
+        return img
+    except Exception as e:
+        print(f"ERROR in severity preprocess: {e}")
+        raise e
 
 # --------------------------------------------------
 # Predict severity
