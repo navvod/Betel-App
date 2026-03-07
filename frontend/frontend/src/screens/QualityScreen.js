@@ -39,7 +39,7 @@ export default function QualityScreen({ navigation }) {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({ 
-      mediaTypes: "images",
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
       allowsEditing: true,
       aspect: [1, 1]
