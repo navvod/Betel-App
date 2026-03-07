@@ -76,6 +76,7 @@ def upload_image(request):
 
         # Read once to reuse bytes
         image_bytes = image.read()
+        print(f"DEBUG: Received image type: {type(image_bytes)}, length: {len(image_bytes)}")
 
         # ──────────────────────────────────────────────────────────────
         # Stage 1: Betel leaf detection
@@ -87,7 +88,7 @@ def upload_image(request):
                 "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
                 "is_betel": False,
                 "betel_confidence": betel_conf
-            })
+            }, status=400)
 
         # ──────────────────────────────────────────────────────────────
         # Stage 2: Disease prediction (multi-label)
@@ -155,7 +156,7 @@ def check_commercial(request):
                 "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
                 "is_betel": False,
                 "betel_confidence": betel_conf
-            })
+            }, status=400)
 
         # Stage 2: Save temporarily for model processing (if it requires a path)
         filename = f"{uuid.uuid4()}_{image.name}"
@@ -211,7 +212,7 @@ def check_variety(request):
                 "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
                 "is_betel": False,
                 "betel_confidence": betel_conf
-            })
+            }, status=400)
 
         # Stage 2: Save temporarily for model processing (if it requires a path)
         filename = f"{uuid.uuid4()}_{image.name}"
@@ -267,7 +268,7 @@ def check_quality(request):
                 "error": "❗️නිවේදනයයි ❗️ මෙය බුලත් පත්‍රයක් නොවේ.කරුණාකර නිවැරදි ඡායරුප භාවිතා කරන්න.",
                 "is_betel": False,
                 "betel_confidence": betel_conf
-            })
+            }, status=400)
 
         # Stage 2: Save temporarily for model processing (if it requires a path)
         filename = f"{uuid.uuid4()}_{image.name}"
