@@ -19,6 +19,7 @@ import VarietyScreen from "../screens/VarietyScreen";
 import CommercialScreen from "../screens/CommercialScreen";
 import CommercialResultScreen from "../screens/CommercialResultScreen";
 import VarietyResultScreen from "../screens/VarietyResultScreen";
+import DiseaseHistoryScreen from "../screens/DiseaseHistoryScreen";
 
 const DiseaseStack = createNativeStackNavigator();
 function DiseaseStackNavigator() {
@@ -105,6 +106,25 @@ function VarietyCommercialStackNavigator() {
   );
 }
 
+const ProfileStack = createNativeStackNavigator();
+
+function ProfileStackNavigator() {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen
+        name="ProfileHome"
+        component={ProfileScreen}
+        options={{ title: "Profile", headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="History"
+        component={DiseaseHistoryScreen}
+        options={{ title: "Disease History" }}
+      />
+    </ProfileStack.Navigator>
+  );
+}
+
 const Tab = createBottomTabNavigator();
 export default function AppNavigator() {
   return (
@@ -118,7 +138,7 @@ export default function AppNavigator() {
             backgroundColor: "transparent",
             borderTopWidth: 0,
             position: "absolute",
-            height: 85,
+            height: 95,
             paddingBottom: 15,
           },
           tabBarBackground: () => (
@@ -163,7 +183,7 @@ export default function AppNavigator() {
           name="VarietyCommercial"
           component={VarietyCommercialStackNavigator}
         />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Profile" component={ProfileStackNavigator} />
       </Tab.Navigator>
     </NavigationContainer>
   );
