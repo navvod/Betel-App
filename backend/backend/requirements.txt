@@ -9,4 +9,4 @@ tensorflow
 numpy
 pillow
 django-environ
-django-cors-headers
+firebase-admin
