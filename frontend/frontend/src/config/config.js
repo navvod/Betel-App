@@ -1,10 +1,7 @@
 import { API_BASE as ENV_API_BASE } from '@env';
 
-// Hardcoded fallback since .env might not be refreshing in the packager
-// (Update this to your current PC IP if needed, e.g. 172.20.10.5)
-const HARDCODED_IP = "http://10.232.24.184:8000/api";
-
-export const API_BASE = ENV_API_BASE || HARDCODED_IP;
+// Use the ENV value if available, otherwise fallback to your current PC IP
+export const API_BASE = ENV_API_BASE || "http://172.20.10.5:8000/api";
 
 console.log("🔧 Config loaded. API_BASE:", API_BASE);
 
