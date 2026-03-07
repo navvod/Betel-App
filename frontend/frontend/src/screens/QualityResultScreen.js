@@ -100,6 +100,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0f3d2e",
   },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    zIndex: 10,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    borderRadius: 20,
+    padding: 5,
+  },
   image: {
     width: "100%",
     height: 300,

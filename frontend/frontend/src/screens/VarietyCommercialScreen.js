@@ -8,7 +8,7 @@ export default function VarietyCommercialScreen({ navigation }) {
   return (
     <LinearGradient colors={["#0f3d2e", "#145a32"]} style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
-        <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.content}>
           <View style={styles.header}>
             <Text style={styles.title}>Variety & Commercial</Text>
           </View>
@@ -24,7 +24,7 @@ export default function VarietyCommercialScreen({ navigation }) {
               onPress={() => navigation.navigate("CommercialScreen")}
             />
           </View>
-        </ScrollView>
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -41,22 +41,26 @@ function FeatureCard({ title, icon, onPress }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { padding: 20 },
-  header: { marginBottom: 20 },
-  title: { fontSize: 35, fontWeight: "bold", color: "#eafaf1" },
-  grid: { gap: 20 },
+  content: { flex: 1, padding: 25 },
+  header: { marginBottom: 30, alignItems: "center" },
+  title: { fontSize: 32, fontWeight: "bold", color: "#eafaf1" },
+  grid: { flex: 1, justifyContent: "center", gap: 30, paddingBottom: 60 },
   card: {
     backgroundColor: "#eafaf1",
-    borderRadius: 20,
-    paddingVertical: 30,
-    paddingHorizontal: 20,
+    borderRadius: 24,
+    paddingVertical: 50,
+    paddingHorizontal: 25,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 4,
+    elevation: 8,
     borderWidth: 1,
     borderColor: "#9be7a6",
     flexDirection: "row",
-    gap: 15,
+    gap: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
   },
   icon: { marginBottom: 0 },
   cardTitle: { fontSize: 24, fontWeight: "800", color: "#145a32" },
