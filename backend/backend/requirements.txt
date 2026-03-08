@@ -9,3 +9,4 @@ tensorflow
 numpy
 pillow
 django-environ
+firebase-admin

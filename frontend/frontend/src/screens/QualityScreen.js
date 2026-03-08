@@ -78,7 +78,7 @@ export default function QualityScreen({ navigation }) {
 
       const data = await response.json();
       
-      if (response.ok) {
+      if (response.ok && !data.error) {
         // Navigate to result screen instead of setting state
         navigation.navigate("QualityResultScreen", {
           image: image,
@@ -89,6 +89,7 @@ export default function QualityScreen({ navigation }) {
         setImage(null);
         setResult(null);
       } else {
+        // Show the error message from the backend (like the betel leaf validation error)
         Alert.alert("Error", data.error || "Failed to check quality");
       }
     } catch (error) {
@@ -154,6 +155,10 @@ const ActionButton = ({ icon, label, onPress }) => (
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 20 },
+  backButton: {
+    marginBottom: 10,
+    alignSelf: "flex-start",
+  },
   header: { marginTop: -20, marginBottom: 20, alignItems: "center" },
   title: { fontSize: 32, fontWeight: "bold", color: "#eafaf1", marginBottom: 5 },
   subtitle: { fontSize: 14, color: "#c8f7dc", textAlign: "center" },

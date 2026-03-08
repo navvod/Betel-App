@@ -136,3 +136,8 @@ environ.Env.read_env()
 
 OPENAI_API_KEY = env("OPENAI_API_KEY")
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'api.firebase_auth.FirebaseAuthentication',
+    )
+}

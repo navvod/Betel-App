@@ -19,6 +19,6 @@ android/app/build/
 .DS_Store
 Thumbs.db
 backend/backend/media/
-backend/backend/api/ml/quality.h5
-backend/backend/api/ml/commercial.h5
-backend/backend/api/ml/variety.h5
+backend/backend/api/uploads/
+
+firebase-service-account.json
