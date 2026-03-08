@@ -21,10 +21,10 @@ export default function ResultScreen({ route, navigation }) {
     severity,
     remedy,
   } = route.params || {};
-  //  REPLACE WITH
-const severityLevel = severity?.includes("/")
-  ? severity.split("/")?.[1]
-  : severity || "unknown";
+
+  const severityLevel = severity?.includes("/")
+    ? severity.split("/")?.[1]
+    : severity || "unknown";
 
   // Sort diseases by confidence to identify main and minor
   const sortedIndices = confidences
