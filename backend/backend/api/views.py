@@ -43,6 +43,7 @@ DISEASE_MAP = {
 
 # ── Speech directory for cached MP3 files ────────────────────────────────────
 SPEECH_DIR = os.path.join(settings.MEDIA_ROOT, "speech")
+from .ml.price_predict import predict_price
 
 
 # /api/
@@ -165,6 +166,31 @@ def upload_image(request):
 
 
 # /api/check-commercial/
+@csrf_exempt
+def get_price_prediction(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            date_str = data.get("date")
+            district = data.get("district")
+            market_type = data.get("marketType")
+            variety = data.get("variety")
+            quality = data.get("quality")
+
+            if not all([date_str, district, market_type, variety, quality]):
+                return JsonResponse({"error": "Missing required fields"}, status=400)
+
+            predicted_price = predict_price(date_str, district, market_type, variety, quality)
+            
+            return JsonResponse({
+                "price": f"Rs. {predicted_price:.2f}",
+                "raw_price": predicted_price
+            })
+        except Exception as e:
+            print(f"Error in price prediction view: {e}")
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Only POST requests allowed"}, status=405)
+
 @csrf_exempt
 def check_commercial(request):
     full_image_path = None

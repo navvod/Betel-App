@@ -13,4 +13,5 @@ urlpatterns = [
     path("advisory/", advisory_view),
     path("speech/", views.generate_speech),                
     path("advisory-audio/", advisory_with_audio), 
+    path("predict-price/", views.get_price_prediction),
 ]

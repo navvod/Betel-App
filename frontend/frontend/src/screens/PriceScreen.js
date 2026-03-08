@@ -7,7 +7,10 @@ import {
   ScrollView,
   Platform,
   Modal,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
+import { API_BASE } from "../config/config";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -22,6 +25,7 @@ export default function PriceScreen() {
   const [variety, setVariety] = useState(null);
   const [quality, setQuality] = useState(null); // 'Premium' | 'Standard'
   const [price, setPrice] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Constants
   const DISTRICTS = ["Kurunegala", "Gampaha"];
@@ -55,13 +59,43 @@ export default function PriceScreen() {
     setQuality(selectedQuality);
   };
 
-  const handleSeePrice = () => {
+  const handleSeePrice = async () => {
     if (!district || !marketType || !variety || !quality) {
-      alert("Please select all fields");
+      Alert.alert("Error", "Please select all fields");
       return;
     }
-    // Mock price calculation
-    setPrice("Rs. 1500.00");
+
+    try {
+      setIsLoading(true);
+      setPrice(null);
+
+      const response = await fetch(`${API_BASE}/predict-price/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          date: date.toISOString(),
+          district,
+          marketType,
+          variety,
+          quality,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setPrice(data.price);
+      } else {
+        Alert.alert("Error", data.error || "Failed to predict price");
+      }
+    } catch (error) {
+      console.error("Price prediction error:", error);
+      Alert.alert("Network Error", "Could not connect to server");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onDateChange = (event, selectedDate) => {
@@ -214,14 +248,22 @@ export default function PriceScreen() {
           )}
 
           {/* See Price Button */}
-          <TouchableOpacity style={styles.checkButton} onPress={handleSeePrice}>
-            <Text style={styles.checkButtonText}>See Price</Text>
+          <TouchableOpacity 
+            style={[styles.checkButton, isLoading && styles.checkButtonDisabled]} 
+            onPress={handleSeePrice}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="#145A32" />
+            ) : (
+              <Text style={styles.checkButtonText}>See Price</Text>
+            )}
           </TouchableOpacity>
 
           {/* Price Display */}
           {price && (
             <View style={styles.resultCard}>
-              <Text style={styles.resultLabel}>Estimated Price</Text>
+              <Text style={styles.resultLabel}>Estimated Price (per 1000 leaves)</Text>
               <Text style={styles.resultPrice}>{price}</Text>
             </View>
           )}
@@ -366,12 +408,16 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 14,
     alignItems: "center",
+    justifyContent: "center",
     marginTop: 10,
     elevation: 4,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
+  },
+  checkButtonDisabled: {
+    backgroundColor: "#a2d9ce",
   },
   checkButtonText: {
     color: "#145A32", // Dark green text
