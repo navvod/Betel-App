@@ -12,6 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function ResultScreen({ route, navigation }) {
+
   const {
     image,
     diseases = [],
@@ -21,7 +22,9 @@ export default function ResultScreen({ route, navigation }) {
     remedy,
   } = route.params || {};
 
-  const severityLevel = severity?.split("/")?.[1] || "unknown";
+  const severityLevel = severity?.includes("/")
+    ? severity.split("/")?.[1]
+    : severity || "unknown";
 
   // Sort diseases by confidence to identify main and minor
   const sortedIndices = confidences
@@ -36,6 +39,7 @@ export default function ResultScreen({ route, navigation }) {
   const minorDiseases = sortedIndices
     .slice(1)
     .map((item) => ({ name: diseases[item.index], conf: item.conf }));
+
 
   // Animated value
   const progressAnim = useRef(new Animated.Value(0)).current;
