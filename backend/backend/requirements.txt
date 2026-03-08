@@ -10,3 +10,5 @@ numpy
 pillow
 django-environ
 firebase-admin
+gtts
+openai
