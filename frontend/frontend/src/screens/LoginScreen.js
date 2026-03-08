@@ -11,11 +11,13 @@ import {
   Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '../context/AuthContext';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { login, isLoading } = useContext(AuthContext);
 
   const handleLogin = async () => {
@@ -51,14 +53,26 @@ export default function LoginScreen({ navigation }) {
             keyboardType="email-address"
             autoCapitalize="none"
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="#a2d9ce"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="Password"
+              placeholderTextColor="#a2d9ce"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity 
+              style={styles.eyeIcon} 
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Ionicons 
+                name={showPassword ? "eye-off" : "eye"} 
+                size={24} 
+                color="#a2d9ce" 
+              />
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity
             style={styles.loginBtn}
@@ -121,6 +135,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderWidth: 1,
     borderColor: 'rgba(162, 217, 206, 0.3)',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 12,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(162, 217, 206, 0.3)',
+    overflow: 'hidden',
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 15,
+    color: '#fff',
+    fontSize: 16,
+    backgroundColor: 'transparent',
+  },
+  eyeIcon: {
+    padding: 10,
+    marginRight: 5,
   },
   loginBtn: {
     backgroundColor: '#1e8449',
