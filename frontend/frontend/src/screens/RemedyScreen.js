@@ -14,9 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAudioPlayer } from "expo-audio";           // expo-audio for MP3 playback
 import NetInfoModule from "@react-native-community/netinfo"; // network connectivity check
-
-// Backend base URL — change this to your server IP when deploying
-const API_BASE = "http://192.168.8.126:8000";
+import { API_BASE } from "../config/config";
 
 export default function RemedyScreen({ route }) {
 
@@ -47,9 +45,11 @@ export default function RemedyScreen({ route }) {
   //  On mount: check network then fetch remedy + audio 
   useEffect(() => {
     NetInfoModule.fetch().then((state) => {
-      // Consider offline if not connected OR internet is not reachable
-      const offline = !(state.isConnected && state.isInternetReachable);
-      console.log("📡 Offline:", offline);
+      // Consider offline only if absolutely NOT connected to any network.
+      // We ignore isInternetReachable because it can be false on local dev Wi-Fi 
+      // even if the backend IP is perfectly reachable.
+      const offline = !state.isConnected;
+      console.log("📡 Network Connected:", state.isConnected, "| Internet Reachable:", state.isInternetReachable);
       setIsOffline(offline);
       fetchAll(offline);
     });
