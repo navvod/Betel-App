@@ -13,7 +13,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function ResultScreen({ route, navigation }) {
 
-  const { image, disease, confidence, severity, remedy } = route.params || {};
+   const {
+    image,
+    diseases = [],
+    confidences = [],
+    healthy = false,
+    severity,
+    remedy,
+  } = route.params || {};
+
   //  REPLACE WITH
 const severityLevel = severity?.includes("/")
   ? severity.split("/")?.[1]
