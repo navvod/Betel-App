@@ -96,7 +96,7 @@ export default function RemedyScreen({ route }) {
     // LLM-enhanced remedy (cultural, scientific, prevention, safety)
     // Pre-generated Sinhala audio URL (gTTS MP3 cached by MD5 hash)
     try {
-      const response = await fetch(`${API_BASE}/api/advisory-audio/`, {
+      const response = await fetch(`${API_BASE}/advisory-audio/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -139,8 +139,9 @@ export default function RemedyScreen({ route }) {
 
   // Build the full audio URL by prepending API_BASE to the relative media path
   // e.g. "/media/speech/speech_abc123.mp3" → "http://192.168.8.126:8000/media/speech/..."
+  const API_HOST = API_BASE.replace(/\/api$/, "");   // "http://192.168.8.126:8000"
   const remoteAudioUrl = remedy?.audio_url
-    ? `${API_BASE}${remedy.audio_url}`
+    ? `${API_HOST}${remedy.audio_url}`
     : null;
 
   // Audio is only available when online and backend returned a URL
