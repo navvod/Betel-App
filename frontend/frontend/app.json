@@ -36,11 +36,11 @@
       "expo-audio",
       "expo-secure-store"
     ],
+    "owner": "lakna_d",
     "extra": {
       "eas": {
-        "projectId": "a1ad76ac-ea58-4c7d-8fb3-2edfda0d19ea"
+        "projectId": "7a6ca103-2000-485b-bae5-3ff8883beca0"
       }
-    },
-    "owner": "lakna_d"
+    }
   }
 }
