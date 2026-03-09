@@ -7,52 +7,55 @@ on:
     branches: [main]
 
 jobs:
+  # ──────────────────────────────────────────────────────────
+  # JOB 1: Frontend check
+  # ──────────────────────────────────────────────────────────
   lint:
-    name: Lint Frontend
+    name: ✅ Lint Frontend
     runs-on: ubuntu-latest
     defaults:
       run:
-        # ✅ FIXED PATH: Betel-App/frontend/frontend/
         working-directory: frontend/frontend
 
     steps:
-      - name: Checkout code
+      - name: ⬇️ Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: 🟢 Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
-          # ✅ FIXED PATH
-          cache-dependency-path: frontend/frontend/package-lock.json
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm ci
 
-      - name: Check for build errors
+      - name: 🔍 Check for build errors
         run: npx expo export --platform android --output-dir /tmp/expo-check || true
 
+  # ──────────────────────────────────────────────────────────
+  # JOB 2: Backend check
+  # Both requirements.txt and manage.py are in backend/backend/
+  # ──────────────────────────────────────────────────────────
   backend-check:
-    name: Check Backend
+    name: ✅ Check Backend
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: backend
+        working-directory: backend/backend
 
     steps:
-      - name: Checkout code
+      - name: ⬇️ Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: 🐍 Setup Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Check Django configuration
+      - name: 🔍 Check Django configuration
         env:
           SECRET_KEY: "ci-test-secret-key-not-real"
           DEBUG: "True"
