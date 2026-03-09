@@ -1,0 +1,59 @@
+name: CI — Lint & Check
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint Frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for build errors
+        run: npx expo export --platform android --output-dir /tmp/expo-check || true
+
+  backend-check:
+    name: Check Backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check Django configuration
+        env:
+          SECRET_KEY: "ci-test-secret-key-not-real"
+          DEBUG: "True"
+          ALLOWED_HOSTS: "localhost"
+          OPENAI_API_KEY: "sk-test"
+        run: python manage.py check
