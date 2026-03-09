@@ -1,0 +1,91 @@
+name: 🤖 Build Android (EAS)
+
+on:
+  push:
+    branches:
+      - main       # → production AAB (Play Store format)
+      - develop    # → preview APK (for testing)
+
+  # Lets you manually trigger a build from the GitHub Actions tab
+  # without needing to push any code
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "Build profile"
+        required: true
+        default: "preview"
+        type: choice
+        options:
+          - preview
+          - production
+
+jobs:
+  build-android:
+    name: Build Android (${{ github.ref == 'refs/heads/main' && 'Production AAB' || 'Preview APK' }})
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Check out your code ──────────────────────────────
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
+
+      # ── 2. Set up Node.js ───────────────────────────────────
+      - name: 🟢 Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      # ── 3. Install npm packages ─────────────────────────────
+      - name: 📦 Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      # ── 4. Set up Expo + EAS CLI ────────────────────────────
+      - name: 🚀 Setup Expo & EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      # ── 5. Pick the right build profile ────────────────────
+      #   manual trigger  → use the dropdown selection
+      #   push to main    → production (AAB)
+      #   push to develop → preview (APK)
+      - name: 🎯 Set build profile
+        id: profile
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "profile=${{ github.event.inputs.profile }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "profile=production" >> $GITHUB_OUTPUT
+          else
+            echo "profile=preview" >> $GITHUB_OUTPUT
+          fi
+
+      # ── 6. Build on EAS cloud ───────────────────────────────
+      #   --no-wait means GitHub Actions finishes quickly and
+      #   the actual build runs in EAS cloud (you track it on expo.dev)
+      - name: 🏗️ EAS Build
+        working-directory: frontend
+        env:
+          EXPO_PUBLIC_API_BASE: ${{ secrets.EXPO_PUBLIC_API_BASE }}
+        run: |
+          eas build \
+            --platform android \
+            --profile ${{ steps.profile.outputs.profile }} \
+            --non-interactive \
+            --no-wait
+
+      # ── 7. Print where to find your build ──────────────────
+      - name: ✅ Done — track your build
+        run: |
+          echo "================================================"
+          echo "  Build submitted to EAS cloud!"
+          echo "  Profile : ${{ steps.profile.outputs.profile }}"
+          echo "  Branch  : ${{ github.ref_name }}"
+          echo ""
+          echo "  👉 Track it at:"
+          echo "  https://expo.dev/accounts/lakna_d/projects/frontend/builds"
+          echo "================================================"
