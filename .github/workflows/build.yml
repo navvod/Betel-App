@@ -6,8 +6,6 @@ on:
       - main       # → production AAB (Play Store format)
       - develop    # → preview APK (for testing)
 
-  # Lets you manually trigger a build from the GitHub Actions tab
-  # without needing to push any code
   workflow_dispatch:
     inputs:
       profile:
@@ -29,18 +27,14 @@ jobs:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v4
 
-      # ── 2. Set up Node.js ───────────────────────────────────
+      # ── 2. Set up Node.js (no cache — avoids GitHub cache service issues) ──
       - name: 🟢 Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
-          # ✅ FIXED PATH: Betel-App/frontend/frontend/package-lock.json
-          cache-dependency-path: frontend/frontend/package-lock.json
 
       # ── 3. Install npm packages ─────────────────────────────
       - name: 📦 Install dependencies
-        # ✅ FIXED PATH
         working-directory: frontend/frontend
         run: npm ci
 
@@ -52,9 +46,6 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       # ── 5. Pick the right build profile ────────────────────
-      #   manual trigger  → use the dropdown selection
-      #   push to main    → production (AAB)
-      #   push to develop → preview (APK)
       - name: 🎯 Set build profile
         id: profile
         run: |
@@ -67,10 +58,7 @@ jobs:
           fi
 
       # ── 6. Build on EAS cloud ───────────────────────────────
-      #   --no-wait means GitHub Actions finishes quickly and
-      #   the actual build runs in EAS cloud (you track it on expo.dev)
       - name: 🏗️ EAS Build
-        # ✅ FIXED PATH
         working-directory: frontend/frontend
         env:
           EXPO_PUBLIC_API_BASE: ${{ secrets.EXPO_PUBLIC_API_BASE }}
