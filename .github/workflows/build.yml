@@ -35,11 +35,13 @@ jobs:
         with:
           node-version: 20
           cache: "npm"
-          cache-dependency-path: frontend/package-lock.json
+          # ✅ FIXED PATH: Betel-App/frontend/frontend/package-lock.json
+          cache-dependency-path: frontend/frontend/package-lock.json
 
       # ── 3. Install npm packages ─────────────────────────────
       - name: 📦 Install dependencies
-        working-directory: frontend
+        # ✅ FIXED PATH
+        working-directory: frontend/frontend
         run: npm ci
 
       # ── 4. Set up Expo + EAS CLI ────────────────────────────
@@ -68,7 +70,8 @@ jobs:
       #   --no-wait means GitHub Actions finishes quickly and
       #   the actual build runs in EAS cloud (you track it on expo.dev)
       - name: 🏗️ EAS Build
-        working-directory: frontend
+        # ✅ FIXED PATH
+        working-directory: frontend/frontend
         env:
           EXPO_PUBLIC_API_BASE: ${{ secrets.EXPO_PUBLIC_API_BASE }}
         run: |
