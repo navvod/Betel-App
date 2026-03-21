@@ -106,7 +106,7 @@ Severity Level  : ${severityLevel.toUpperCase()}
         {/* Highlighted Disease */}
         <View style={styles.diseaseBox}>
           <Text style={styles.diseaseLabel}>
-            {healthy ? "Status" : "ප්‍රධානථම රෝගය"}
+            {healthy ? "Status" : "ප්‍රධානතම රෝගය"}
           </Text>
           <Text style={styles.diseaseName}>
             {healthy ? "Healthy Leaf" : mainDisease}
@@ -116,7 +116,7 @@ Severity Level  : ${severityLevel.toUpperCase()}
         {/* Minor Diseases */}
         {!healthy && minorDiseases.length > 0 && (
           <View style={styles.minorSection}>
-            <Text style={styles.label}>ද්විතීය රෝග(ය)</Text>
+            <Text style={styles.label}>ද්විතියික රෝග(ය)</Text>
             {minorDiseases.map((d, i) => (
               <View key={i} style={styles.minorItem}>
                 <Ionicons name="alert-circle-outline" size={16} color="#E67E22" />
@@ -130,7 +130,7 @@ Severity Level  : ${severityLevel.toUpperCase()}
 
         {/* Confidence */}
         <Text style={styles.label}>
-          {healthy ? "Confidence Score" : "Main Disease Confidence"}
+          {healthy ? "Confidence Score" : "ප්‍රධාන රෝගයේ විශ්වාසනීය මට්ටම"}
         </Text>
         <Text
           style={[styles.percent, { color: getConfidenceColor() }]}
@@ -154,7 +154,7 @@ Severity Level  : ${severityLevel.toUpperCase()}
         {/* Severity - Only if NOT healthy */}
         {!healthy && (
           <>
-            <Text style={styles.label}>Severity Level (ප්‍රධානථම රෝගය)</Text>
+            <Text style={styles.label}>ප්‍රධාන රෝගයේ බරපතල භාවය</Text>
             <View
               style={[
                 styles.severityBadge,
@@ -183,7 +183,7 @@ Severity Level  : ${severityLevel.toUpperCase()}
           >
             <Ionicons name="medkit-outline" size={20} color="#fff" />
             <Text style={styles.remedyBtnText}>
-              View Treatment & Remedies
+              ප්‍රතිකාර සහ පිළියම්
             </Text>
           </TouchableOpacity>
         )}
@@ -198,7 +198,7 @@ Severity Level  : ${severityLevel.toUpperCase()}
             size={20}
             color="#145A32"
           />
-          <Text style={styles.shareText}>Share Report</Text>
+          <Text style={styles.shareText}>බෙදා හරින්න</Text>
         </TouchableOpacity>
 
         {/* Scan Again */}
@@ -207,7 +207,7 @@ Severity Level  : ${severityLevel.toUpperCase()}
           onPress={() => navigation.navigate("DiseaseHome")}
         >
           <Ionicons name="scan" size={22} color="#fff" />
-          <Text style={styles.scanText}>Scan Again</Text>
+          <Text style={styles.scanText}>නැවත පරීක්ෂාව</Text>
         </TouchableOpacity>
       </View>
       </ScrollView>
