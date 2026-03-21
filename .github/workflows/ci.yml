@@ -7,58 +7,54 @@ on:
     branches: [main]
 
 jobs:
-  # ──────────────────────────────────────────────────────────
   # JOB 1: Frontend check
-  # ──────────────────────────────────────────────────────────
   lint:
-    name: ✅ Lint Frontend
+    name:  Lint Frontend
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend/frontend
 
     steps:
-      - name: ⬇️ Checkout code
+      - name:  Checkout code
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node.js 20
+      - name:  Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: 📦 Install dependencies
+      - name:  Install dependencies
         run: npm ci
 
-      - name: 🔍 Check for build errors
+      - name:  Check for build errors
         run: npx expo export --platform android --output-dir /tmp/expo-check || true
 
-  # ──────────────────────────────────────────────────────────
   # JOB 2: Backend check
-  # ──────────────────────────────────────────────────────────
   backend-check:
-    name: ✅ Check Backend
+    name:  Check Backend
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend/backend
 
     steps:
-      - name: ⬇️ Checkout code
+      - name:  Checkout code
         uses: actions/checkout@v4
 
-      - name: 🐍 Setup Python 3.13
+      - name: Setup Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
-      - name: 📦 Install Django core packages
+      - name:  Install Django core packages
         run: |
           pip install \
             Django==6.0 \
             djangorestframework \
             django-environ
 
-      - name: 🔍 Validate Django settings
+      - name:  Validate Django settings
         env:
           SECRET_KEY: "ci-test-secret-key-not-real"
           DEBUG: "True"
@@ -115,5 +111,5 @@ jobs:
           django.setup()
           from django.core.management import call_command
           call_command('check')
-          print('✅ Django core configuration is valid!')
+          print(' Django core configuration is valid!')
           PYEOF

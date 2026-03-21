@@ -1,10 +1,10 @@
-name: 🤖 Build Android (EAS)
+name:  Build Android (EAS)
 
 on:
   push:
     branches:
-      - main       # → production AAB (Play Store format)
-      - develop    # → preview APK (for testing)
+      - main       
+      - develop    
 
   workflow_dispatch:
     inputs:
@@ -24,29 +24,29 @@ jobs:
 
     steps:
       # ── 1. Check out your code ──────────────────────────────
-      - name: ⬇️ Checkout code
+      - name:  Checkout code
         uses: actions/checkout@v4
 
       # ── 2. Set up Node.js (no cache — avoids GitHub cache service issues) ──
-      - name: 🟢 Setup Node.js 20
+      - name:  Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
       # ── 3. Install npm packages ─────────────────────────────
-      - name: 📦 Install dependencies
+      - name:  Install dependencies
         working-directory: frontend/frontend
         run: npm ci
 
       # ── 4. Set up Expo + EAS CLI ────────────────────────────
-      - name: 🚀 Setup Expo & EAS
+      - name:  Setup Expo & EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       # ── 5. Pick the right build profile ────────────────────
-      - name: 🎯 Set build profile
+      - name:  Set build profile
         id: profile
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
@@ -58,7 +58,7 @@ jobs:
           fi
 
       # ── 6. Build on EAS cloud ───────────────────────────────
-      - name: 🏗️ EAS Build
+      - name:  EAS Build
         working-directory: frontend/frontend
         env:
           EXPO_PUBLIC_API_BASE: ${{ secrets.EXPO_PUBLIC_API_BASE }}
@@ -69,14 +69,4 @@ jobs:
             --non-interactive \
             --no-wait
 
-      # ── 7. Print where to find your build ──────────────────
-      - name: ✅ Done — track your build
-        run: |
-          echo "================================================"
-          echo "  Build submitted to EAS cloud!"
-          echo "  Profile : ${{ steps.profile.outputs.profile }}"
-          echo "  Branch  : ${{ github.ref_name }}"
-          echo ""
-          echo "  👉 Track it at:"
-          echo "  https://expo.dev/accounts/lakna_d/projects/frontend/builds"
-          echo "================================================"
+     
