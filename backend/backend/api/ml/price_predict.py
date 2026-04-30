@@ -38,35 +38,36 @@ def load_data():
     return DATA_CACHE
 
 def get_model_and_scaler(commercial_type):
-    """Load the specific model and recreate the scaler for a commercial type."""
+    """Load the specific TFLite interpreter and recreate the scaler for a commercial type."""
     global MODELS, SCALERS
-    
-    ctype = commercial_type.capitalize() # Ensure format like 'Peedunu'
+
+    ctype = commercial_type.capitalize()
     if ctype not in MODELS:
         try:
-            model_path = os.path.join(ML_DIR, f"lstm_{ctype}.h5")
+            model_path = os.path.join(ML_DIR, f"lstm_{ctype}.tflite")
             if not os.path.exists(model_path):
                 raise FileNotFoundError(f"Model file not found: {model_path}")
-            
-            # Load with compile=False to avoid issues with metrics/losses not available in current environment
-            MODELS[ctype] = tf.keras.models.load_model(model_path, compile=False)
-            
+
+            interpreter = tf.lite.Interpreter(model_path=model_path)
+            interpreter.allocate_tensors()
+            MODELS[ctype] = interpreter
+
             # Recreate Scaler from full data for this ctype
             df = load_data()
             subset = df[df['Commercial Type'] == ctype].copy()
-            
+
             # Log transform Price (as done in training)
             prices_log = np.log(subset[['Price']].values)
-            
+
             scaler = MinMaxScaler(feature_range=(0, 1))
             scaler.fit(prices_log)
             SCALERS[ctype] = scaler
-            
-            print(f"✅ Model and Scaler loaded for {ctype}")
+
+            print(f"✅ TFLite model and Scaler loaded for {ctype}")
         except Exception as e:
             print(f"❌ Error loading components for {ctype}: {e}")
             raise e
-            
+
     return MODELS[ctype], SCALERS[ctype]
 
 def prepare_input_sequence(target_date_str, district, market_type, commercial_type, quality_grade):
@@ -135,16 +136,21 @@ def predict_price(target_date_str, district, market_type, commercial_type, quali
     Main prediction function.
     """
     try:
-        model, scaler = get_model_and_scaler(commercial_type)
+        interpreter, scaler = get_model_and_scaler(commercial_type)
         input_seq = prepare_input_sequence(target_date_str, district, market_type, commercial_type, quality_grade)
-        
-        # Predict
-        predicted_scaled = model.predict(input_seq, verbose=0)
-        
+
+        # Run TFLite inference
+        input_details = interpreter.get_input_details()
+        output_details = interpreter.get_output_details()
+
+        interpreter.set_tensor(input_details[0]['index'], input_seq)
+        interpreter.invoke()
+        predicted_scaled = interpreter.get_tensor(output_details[0]['index'])
+
         # Inverse transform: Scale -> Log -> Price
         predicted_log = scaler.inverse_transform(predicted_scaled)
         predicted_price = np.exp(predicted_log)[0][0]
-        
+
         return float(predicted_price)
     except Exception as e:
         print(f"Prediction Error: {e}")
