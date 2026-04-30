@@ -6,18 +6,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const onboardingData = [
   {
-    title: "AI Analysis",
-    description: "Use our advanced AI models to detect diseases, analyze leaf variety, and commercial category with high accuracy.",
+    title: "AI විශ්ලේෂණය",
+    description: "රෝග හඳුනා ගැනීමට, කොළ වර්ගය විශ්ලේෂණය කිරීමට සහ වාණිජ කාණ්ඩය නිවැරදිව හඳුනා ගැනීමට අපගේ උසස් AI ආකෘති භාවිත කරන්න.",
     icon: "brain",
     library: "MaterialCommunityIcons",
-    tips: ["Ensure good lighting", "Keep the leaf centered", "Avoid blurry photos"],
+    tips: ["හොඳ ආලෝකය සහතික කරන්න", "කොළය මධ්‍යගත කරන්න", "බොඳ ඡායාරූප වළකින්න"],
   },
   {
-    title: "Smart Remedies",
-    description: "Get scientific and cultural treatment guides for detected diseases, along with real-time price predictions based on market trends.",
+    title: "ස්මාර්ට් පිළියම්",
+    description: "හඳුනාගත් රෝග සඳහා විද්‍යාත්මක හා සංස්කෘතික ප්‍රතිකාර මාර්ගෝපදේශ ලබා ගන්න, මෙන්ම වෙළඳපල ප්‍රවණතා මත පදනම් වූ තත්‍ය කාල මිල පුරෝකථන ද ලබා ගන්න.",
     icon: "medkit",
     library: "Ionicons",
-    tips: ["Follow expert advice", "Check daily price updates", "Save history for tracking"],
+    tips: ["විශේෂඥ උපදෙස් අනුගමනය කරන්න", "දෛනික මිල යාවත්කාලීන කිරීම් පරීක්ෂා කරන්න", "ලුහුබැඳීම සඳහා ඉතිහාසය සුරකින්න"],
   },
 ];
 
@@ -62,7 +62,7 @@ export default function OnboardingScreen({ onComplete }) {
           <Text style={styles.description}>{currentData.description}</Text>
 
           <View style={styles.tipsCard}>
-            <Text style={styles.tipsTitle}>Pro Tips:</Text>
+            <Text style={styles.tipsTitle}>ප්‍රවීණ උපදෙස්:</Text>
             {currentData.tips.map((tip, index) => (
               <View key={index} style={styles.tipItem}>
                 <Ionicons name="checkmark-circle" size={22} color="#1e8449" />
@@ -85,7 +85,7 @@ export default function OnboardingScreen({ onComplete }) {
 
           <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
             <Text style={styles.nextText}>
-              {currentIndex === onboardingData.length - 1 ? "Get Started" : "Next"}
+              {currentIndex === onboardingData.length - 1 ? "ආරම්භ කරන්න" : "ඊළඟ"}
             </Text>
             <Ionicons name="arrow-forward" size={22} color="#145a32" />
           </TouchableOpacity>
