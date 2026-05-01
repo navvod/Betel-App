@@ -10,3 +10,7 @@ numpy
 pillow
 django-environ
 firebase-admin
+gtts
+openai
+pandas
+scikit-learn

@@ -1,13 +1,13 @@
-import tensorflow as tf
 import numpy as np
 from PIL import Image
 import os
+import tensorflow as tf
 
 # Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-MODEL_PATH = os.path.join(BASE_DIR, "api", "ml", "commercial.h5")
+MODEL_PATH = os.path.join(BASE_DIR, "api", "ml", "commercial.tflite")
 
-# Classes
+# Classes — must match the order in your training class_indices JSON
 COMMERCIAL_CLASSES = [
     "Kanda",
     "Keti",
@@ -15,36 +15,45 @@ COMMERCIAL_CLASSES = [
     "Peedunu",
 ]
 
-model = None
+interpreter = None
+input_details = None
+output_details = None
 
 def load_model():
-    global model
-    if model is None:
+    global interpreter, input_details, output_details
+    if interpreter is None:
         try:
-            model = tf.keras.models.load_model(MODEL_PATH)
-            print("✅ Commercial model loaded successfully")
+            interpreter = tf.lite.Interpreter(model_path=MODEL_PATH)
+            interpreter.allocate_tensors()
+            input_details  = interpreter.get_input_details()
+            output_details = interpreter.get_output_details()
+            print("✅ Commercial TFLite model loaded successfully")
+            print(f"   Input  dtype : {input_details[0]['dtype']}")
+            print(f"   Input  shape : {input_details[0]['shape']}")
         except Exception as e:
-            print(f"❌ Error loading commercial model: {e}")
-            model = None
+            print(f"❌ Error loading commercial TFLite model: {e}")
+            interpreter = None
 
 def preprocess(image_path):
-    # Adjust target size based on your model's training requirement
-    # Common sizes are (224, 224), (256, 256), etc.
-    # Updated to (224, 224) based on error message
-    target_size = (224, 224) 
-    
+    # TFLite model has preprocessing baked in — feed raw uint8 pixels, NO normalisation
     img = Image.open(image_path).convert("RGB")
-    img = img.resize(target_size)
-    img_array = np.array(img, dtype=np.float32) / 255.0  # Normalize if required
-    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+    img = img.resize((224, 224))
+    img_array = np.array(img, dtype=np.uint8)                  # uint8, NO /255
+    img_array = np.expand_dims(img_array, axis=0)              # (1, 224, 224, 3)
     return img_array
 
 def predict_commercial(image_path):
     load_model()
-    if model is None:
-        raise Exception("Commercial model not loaded")
+    if interpreter is None:
+        raise Exception("Commercial TFLite model not loaded")
+
     img_array = preprocess(image_path)
-    predictions = model.predict(img_array)
-    index = np.argmax(predictions[0])
+
+    interpreter.set_tensor(input_details[0]['index'], img_array)
+    interpreter.invoke()
+    predictions = interpreter.get_tensor(output_details[0]['index'])
+
+    index      = int(np.argmax(predictions[0]))
     confidence = float(predictions[0][index])
+
     return COMMERCIAL_CLASSES[index], confidence

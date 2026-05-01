@@ -12,12 +12,15 @@ from django.conf import settings
 FIREBASE_SERVICE_ACCOUNT_PATH = os.path.join(settings.BASE_DIR, 'firebase-service-account.json')
 
 if not firebase_admin._apps:
-    try:
-        cred = credentials.Certificate(FIREBASE_SERVICE_ACCOUNT_PATH)
-        firebase_admin.initialize_app(cred)
-        print("✅ Firebase Admin SDK initialized successfully")
-    except Exception as e:
-        print(f"❌ Error initializing Firebase Admin SDK: {e}")
+    if os.path.exists(FIREBASE_SERVICE_ACCOUNT_PATH):
+        try:
+            cred = credentials.Certificate(FIREBASE_SERVICE_ACCOUNT_PATH)
+            firebase_admin.initialize_app(cred)
+            print("✅ Firebase Admin SDK initialized successfully")
+        except Exception as e:
+            print(f"❌ Error initializing Firebase Admin SDK: {e}")
+    else:
+        print("⚠️ Firebase service account file not found. Firebase authentication will not work.")
 
 class FirebaseAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
