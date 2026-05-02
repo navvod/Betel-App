@@ -2,12 +2,8 @@ import numpy as np
 from PIL import Image
 import io
 import os
-
-# Suppress TFLite deprecation warning
 import warnings
 warnings.filterwarnings("ignore")
-
-import tensorflow as tf
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MODEL_DIR = os.path.join(BASE_DIR, 'api', 'ml')
@@ -15,16 +11,30 @@ MODEL_DIR = os.path.join(BASE_DIR, 'api', 'ml')
 DETECTOR_MODEL_PATH = os.path.join(MODEL_DIR, 'betel_detector.tflite')
 DISEASE_MODEL_PATH  = os.path.join(MODEL_DIR, 'Multi_Disease_N.tflite')
 
-# Load models once at startup
-detector_interpreter = tf.lite.Interpreter(model_path=DETECTOR_MODEL_PATH)
-detector_interpreter.allocate_tensors()
-detector_input_details  = detector_interpreter.get_input_details()
-detector_output_details = detector_interpreter.get_output_details()
+detector_interpreter    = None
+detector_input_details  = None
+detector_output_details = None
+disease_interpreter     = None
+disease_input_details   = None
+disease_output_details  = None
 
-disease_interpreter = tf.lite.Interpreter(model_path=DISEASE_MODEL_PATH)
-disease_interpreter.allocate_tensors()
-disease_input_details  = disease_interpreter.get_input_details()
-disease_output_details = disease_interpreter.get_output_details()
+def _load_models():
+    global detector_interpreter, detector_input_details, detector_output_details
+    global disease_interpreter, disease_input_details, disease_output_details
+    if detector_interpreter is None:
+        import tensorflow as tf
+        detector_interpreter = tf.lite.Interpreter(model_path=DETECTOR_MODEL_PATH)
+        detector_interpreter.allocate_tensors()
+        detector_input_details  = detector_interpreter.get_input_details()
+        detector_output_details = detector_interpreter.get_output_details()
+        print("✅ Betel detector model loaded")
+    if disease_interpreter is None:
+        import tensorflow as tf
+        disease_interpreter = tf.lite.Interpreter(model_path=DISEASE_MODEL_PATH)
+        disease_interpreter.allocate_tensors()
+        disease_input_details  = disease_interpreter.get_input_details()
+        disease_output_details = disease_interpreter.get_output_details()
+        print("✅ Disease model loaded")
 
 # ✅ FIXED: Class order matches actual folder alphabetical order.
 # Old order had Healthy at [7] — but folders sort Healthy to [4].
@@ -70,6 +80,7 @@ def preprocess_image(image_bytes_or_path):
 
 def is_betel_leaf(image_bytes):
     """Run detector → return (is_betel: bool, confidence: float)"""
+    _load_models()
     try:
         input_array = preprocess_image(image_bytes)
         detector_interpreter.set_tensor(detector_input_details[0]['index'], input_array)
@@ -108,6 +119,7 @@ def predict_disease(image_bytes):
       (a diseased leaf is not healthy even if that neuron fires).
     - Fallback: if nothing meets threshold, return the highest-scoring class.
     """
+    _load_models()
     input_array = preprocess_image(image_bytes)
     disease_interpreter.set_tensor(disease_input_details[0]['index'], input_array)
     disease_interpreter.invoke()

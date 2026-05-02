@@ -1,19 +1,24 @@
 import os
 import io
 import numpy as np
-import tensorflow as tf
 from PIL import Image
 
-#  Paths 
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "convnext_severity.tflite")
 
-#  Load TFLite model ONCE at startup 
-interpreter = tf.lite.Interpreter(model_path=MODEL_PATH)
-interpreter.allocate_tensors()
+interpreter    = None
+input_details  = None
+output_details = None
 
-input_details  = interpreter.get_input_details()
-output_details = interpreter.get_output_details()
+def _load_model():
+    global interpreter, input_details, output_details
+    if interpreter is None:
+        import tensorflow as tf
+        interpreter = tf.lite.Interpreter(model_path=MODEL_PATH)
+        interpreter.allocate_tensors()
+        input_details  = interpreter.get_input_details()
+        output_details = interpreter.get_output_details()
+        print("✅ Severity model loaded")
 
 #  Class labels — must match training folder order (alphabetical) 
 # Training used image_dataset_from_directory → sorted alphabetically: early, moderate, severe
@@ -28,26 +33,22 @@ SEVERITY_CLASSES = [
 # Uses ConvNeXt preprocessing — matches training notebook exactly
 def preprocess(image_input):
     try:
-        # Open image from path, file-like object, or raw bytes
         if isinstance(image_input, str):
             img = Image.open(image_input).convert("RGB")
         elif hasattr(image_input, "read"):
-            # File-like object — seek to start before reading
             if hasattr(image_input, "seek"):
                 image_input.seek(0)
             img = Image.open(image_input).convert("RGB")
         else:
-            # Raw bytes
             img = Image.open(io.BytesIO(image_input)).convert("RGB")
 
         img = img.resize((224, 224))
         img = np.array(img, dtype=np.float32)
 
-        #  ConvNeXt preprocessing — matches training code
-        # Training used: tf.keras.applications.convnext.preprocess_input(x)
+        import tensorflow as tf
         img = tf.keras.applications.convnext.preprocess_input(img)
 
-        img = np.expand_dims(img, axis=0)  # add batch dimension → (1, 224, 224, 3)
+        img = np.expand_dims(img, axis=0)
         return img
 
     except Exception as e:
@@ -55,8 +56,8 @@ def preprocess(image_input):
         raise e
 
 
-# ── Predict severity ──────────────────────────────────────────────────────────
 def predict_severity(image_input):
+    _load_model()
     img = preprocess(image_input)
 
     interpreter.set_tensor(input_details[0]["index"], img)
