@@ -26,6 +26,7 @@ export default function PriceScreen() {
   const [quality, setQuality] = useState(null); // 'Premium' | 'Standard'
   const [price, setPrice] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPriceModal, setShowPriceModal] = useState(false);
 
   // Constants
   const DISTRICTS = ["Kurunegala", "Gampaha"];
@@ -87,6 +88,7 @@ export default function PriceScreen() {
 
       if (response.ok) {
         setPrice(data.price);
+        setShowPriceModal(true);
       } else {
         Alert.alert("Error", data.error || "Failed to predict price");
       }
@@ -248,8 +250,8 @@ export default function PriceScreen() {
           )}
 
           {/* See Price Button */}
-          <TouchableOpacity 
-            style={[styles.checkButton, isLoading && styles.checkButtonDisabled]} 
+          <TouchableOpacity
+            style={[styles.checkButton, isLoading && styles.checkButtonDisabled]}
             onPress={handleSeePrice}
             disabled={isLoading}
           >
@@ -260,15 +262,27 @@ export default function PriceScreen() {
             )}
           </TouchableOpacity>
 
-          {/* Price Display */}
-          {price && (
-            <View style={styles.resultCard}>
-              <Text style={styles.resultLabel}>Estimated Price (per 1000 leaves)</Text>
-              <Text style={styles.resultPrice}>{price}</Text>
-            </View>
-          )}
-
         </ScrollView>
+
+        {/* Price Result Modal */}
+        <Modal
+          visible={showPriceModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowPriceModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              <Ionicons name="pricetag" size={40} color="#145A32" style={{ marginBottom: 12 }} />
+              <Text style={styles.modalLabel}>Estimated Price</Text>
+              <Text style={styles.modalSubLabel}>per 1000 leaves</Text>
+              <Text style={styles.modalPrice}>{price}</Text>
+              <TouchableOpacity style={styles.modalCloseButton} onPress={() => setShowPriceModal(false)}>
+                <Text style={styles.modalCloseText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -281,7 +295,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 100,
   },
   header: {
     marginBottom: 20,
@@ -449,5 +463,50 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#7F8C8D",
     fontStyle: "italic",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.55)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalCard: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 32,
+    alignItems: "center",
+    width: "80%",
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  modalLabel: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#145A32",
+  },
+  modalSubLabel: {
+    fontSize: 13,
+    color: "#7F8C8D",
+    marginBottom: 16,
+  },
+  modalPrice: {
+    fontSize: 42,
+    fontWeight: "bold",
+    color: "#145A32",
+    marginBottom: 24,
+  },
+  modalCloseButton: {
+    backgroundColor: "#145A32",
+    paddingVertical: 10,
+    paddingHorizontal: 36,
+    borderRadius: 12,
+  },
+  modalCloseText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
