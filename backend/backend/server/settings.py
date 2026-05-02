@@ -46,6 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "api.apps.ApiConfig",
+    'django_crontab',
+]
+
+CRONJOBS = [
+    ('0 6 * * 2', 'django.core.management.call_command', ['update_betel_prices']),
 ]
 
 MIDDLEWARE = [

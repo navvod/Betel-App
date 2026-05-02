@@ -14,3 +14,6 @@ gtts
 openai
 pandas
 scikit-learn
+django-crontab
+requests
+beautifulsoup4
