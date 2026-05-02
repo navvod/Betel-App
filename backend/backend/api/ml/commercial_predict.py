@@ -1,7 +1,6 @@
 import numpy as np
 from PIL import Image
 import os
-import tensorflow as tf
 
 # Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -22,6 +21,7 @@ output_details = None
 def load_model():
     global interpreter, input_details, output_details
     if interpreter is None:
+        import tensorflow as tf
         try:
             interpreter = tf.lite.Interpreter(model_path=MODEL_PATH)
             interpreter.allocate_tensors()

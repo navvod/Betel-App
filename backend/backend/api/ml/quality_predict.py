@@ -1,4 +1,3 @@
-import tensorflow as tf
 import numpy as np
 from PIL import Image
 import os
@@ -30,6 +29,7 @@ output_details = None
 def load_tflite_model():
     global interpreter, input_details, output_details
     if interpreter is None:
+        import tensorflow as tf
         try:
             if not os.path.exists(MODEL_PATH):
                 raise FileNotFoundError(f"Model file not found at: {MODEL_PATH}")

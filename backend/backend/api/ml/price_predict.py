@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import numpy as np
-import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime, timedelta
 
@@ -43,11 +42,12 @@ def get_model_and_scaler(commercial_type):
     
     ctype = commercial_type.capitalize() # Ensure format like 'Peedunu'
     if ctype not in MODELS:
+        import tensorflow as tf
         try:
             model_path = os.path.join(ML_DIR, f"lstm_{ctype}.h5")
             if not os.path.exists(model_path):
                 raise FileNotFoundError(f"Model file not found: {model_path}")
-            
+
             # Load with compile=False to avoid issues with metrics/losses not available in current environment
             MODELS[ctype] = tf.keras.models.load_model(model_path, compile=False)
             
