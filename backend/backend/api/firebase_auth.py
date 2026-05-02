@@ -4,23 +4,28 @@ from rest_framework import authentication
 from rest_framework import exceptions
 from django.contrib.auth.models import User
 import os
+import json
 from django.conf import settings
 
-# Initialize Firebase Admin SDK
-# Make sure you place your service account JSON file in backend/backend/
-# and update the path here.
 FIREBASE_SERVICE_ACCOUNT_PATH = os.path.join(settings.BASE_DIR, 'firebase-service-account.json')
 
 if not firebase_admin._apps:
-    if os.path.exists(FIREBASE_SERVICE_ACCOUNT_PATH):
-        try:
+    try:
+        cred_json = os.environ.get('FIREBASE_CREDENTIALS_JSON')
+        if cred_json:
+            cred = credentials.Certificate(json.loads(cred_json))
+        elif os.path.exists(FIREBASE_SERVICE_ACCOUNT_PATH):
             cred = credentials.Certificate(FIREBASE_SERVICE_ACCOUNT_PATH)
+        else:
+            cred = None
+
+        if cred:
             firebase_admin.initialize_app(cred)
             print("✅ Firebase Admin SDK initialized successfully")
-        except Exception as e:
-            print(f"❌ Error initializing Firebase Admin SDK: {e}")
-    else:
-        print("⚠️ Firebase service account file not found. Firebase authentication will not work.")
+        else:
+            print("⚠️ Firebase credentials not found. Authentication will not work.")
+    except Exception as e:
+        print(f"❌ Error initializing Firebase Admin SDK: {e}")
 
 class FirebaseAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):

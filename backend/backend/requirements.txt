@@ -17,3 +17,5 @@ scikit-learn
 django-crontab
 requests
 beautifulsoup4
+gunicorn
+whitenoise
