@@ -41,8 +41,21 @@ jobs:
           DJANGO_SETTINGS_MODULE: server.settings
           SECRET_KEY: dummy-secret-key-for-ci
           DEBUG: "True"
+          OPENAI_API_KEY: dummy-openai-key-for-ci
+          ALLOWED_HOSTS: localhost
         run: |
           python manage.py check
+
+      - name: Run tests
+        working-directory: backend/backend
+        env:
+          DJANGO_SETTINGS_MODULE: server.settings
+          SECRET_KEY: dummy-secret-key-for-ci
+          DEBUG: "True"
+          OPENAI_API_KEY: dummy-openai-key-for-ci
+          ALLOWED_HOSTS: localhost
+        run: |
+          python manage.py test api --verbosity=2
 
       - name: Deploy to Railway
         uses: bervProject/railway-deploy@main
