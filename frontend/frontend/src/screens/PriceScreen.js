@@ -16,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function PriceScreen() {
+export default function PriceScreen({ navigation }) {
   // State
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -141,6 +141,9 @@ export default function PriceScreen() {
           
           {/* Header Title */}
           <View style={styles.header}>
+            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={26} color="#eafaf1" />
+            </TouchableOpacity>
             <Text style={styles.title}>Price Prediction</Text>
           </View>
 
@@ -298,12 +301,18 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   header: {
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
+  },
+  backBtn: {
+    marginRight: 12,
+    padding: 4,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#eafaf1", // Changed to light color for dark background
+    color: "#eafaf1",
   },
   section: {
     marginBottom: 24,

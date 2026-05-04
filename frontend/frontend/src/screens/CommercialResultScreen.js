@@ -20,6 +20,20 @@ export default function CommercialResultScreen({ route, navigation }) {
     }).start();
   }, []);
 
+  const sinhalaNames = {
+    Kanda: "කඳ",
+    Keti: "කෙටි",
+    Korikan: "කොරිකන්",
+    Peedunu: "පීදුනු",
+  };
+
+  const getSinhalaName = () => {
+    for (const key of Object.keys(sinhalaNames)) {
+      if (type?.includes(key)) return sinhalaNames[key];
+    }
+    return "";
+  };
+
   // Commercial Type Color Logic (Optional: Customize colors per type if needed)
   const getTypeColor = () => {
     // Example colors for different types, can be adjusted
@@ -59,7 +73,9 @@ Confidence      : ${confidencePercent}%
           {/* Type Badge */}
           <View style={[styles.typeBox, { backgroundColor: getTypeColor() + "20" }]}>
             <Text style={[styles.typeLabel, { color: getTypeColor() }]}>Detected Commercial Type</Text>
-            <Text style={[styles.typeName, { color: getTypeColor() }]}>{type}</Text>
+            <Text style={[styles.typeName, { color: getTypeColor() }]}>
+              {type}{getSinhalaName() ? ` (${getSinhalaName()})` : ""}
+            </Text>
           </View>
 
           {/* Confidence Section */}

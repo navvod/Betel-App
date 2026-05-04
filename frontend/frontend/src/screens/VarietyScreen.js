@@ -86,9 +86,7 @@ export default function VarietyScreen({ navigation }) {
 
   const ActionButton = ({ icon, label, onPress }) => (
     <TouchableOpacity style={styles.actionBtn} onPress={onPress}>
-      <View style={styles.iconCircle}>
-        <Ionicons name={icon} size={32} color="#1e8449" />
-      </View>
+      <Ionicons name={icon} size={28} color="#145a32" />
       <Text style={styles.actionText}>{label}</Text>
     </TouchableOpacity>
   );
@@ -134,6 +132,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
+    paddingBottom: 120,
     alignItems: "center",
   },
   header: {
@@ -152,33 +151,31 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   card: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     width: "100%",
+    backgroundColor: "#eafaf1",
+    borderRadius: 16,
+    padding: 20,
+    elevation: 4,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#9be7a6",
   },
   actionBtn: {
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    borderRadius: 20,
-    padding: 20,
+    flexDirection: "row",
     alignItems: "center",
-    width: "48%",
-    elevation: 5,
-  },
-  iconCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#d5f5e3",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 12,
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: "#c8f7dc",
+    elevation: 2,
   },
   actionText: {
-    fontSize: 16,
-    fontWeight: "600",
+    marginLeft: 15,
+    fontSize: 18,
     color: "#145a32",
-    textAlign: "center",
+    fontWeight: "700",
   },
   previewCard: {
     backgroundColor: "#fff",

@@ -154,7 +154,7 @@ const ActionButton = ({ icon, label, onPress }) => (
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { padding: 20 },
+  content: { padding: 20, paddingBottom: 120 },
   backButton: {
     marginBottom: 10,
     alignSelf: "flex-start",

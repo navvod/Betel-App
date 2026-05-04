@@ -32,8 +32,8 @@ export default function VarietyCommercialScreen({ navigation }) {
 
 function FeatureCard({ title, icon, onPress }) {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Ionicons name={icon} size={40} color="#145a32" style={styles.icon} />
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.85}>
+      <Ionicons name={icon} size={42} color="#145a32" style={styles.icon} />
       <Text style={styles.cardTitle}>{title}</Text>
     </TouchableOpacity>
   );
@@ -47,21 +47,25 @@ const styles = StyleSheet.create({
   grid: { flex: 1, justifyContent: "center", gap: 30, paddingBottom: 60 },
   card: {
     backgroundColor: "#eafaf1",
-    borderRadius: 24,
-    paddingVertical: 50,
-    paddingHorizontal: 25,
+    borderRadius: 16,
+    padding: 10,
+    paddingVertical: 40,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 8,
-    borderWidth: 1,
-    borderColor: "#9be7a6",
-    flexDirection: "row",
-    gap: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderTopColor: "#c8f7dc",
+    borderLeftColor: "#c8f7dc",
+    borderBottomWidth: 6,
+    borderRightWidth: 6,
+    borderBottomColor: "#0a2d1e",
+    borderRightColor: "#0a2d1e",
+    elevation: 10,
+    shadowColor: "#0a2d1e",
+    shadowOffset: { width: 4, height: 6 },
+    shadowOpacity: 0.55,
+    shadowRadius: 6,
   },
-  icon: { marginBottom: 0 },
-  cardTitle: { fontSize: 24, fontWeight: "800", color: "#145a32" },
+  icon: { marginBottom: 12 },
+  cardTitle: { fontSize: 23, fontWeight: "800", color: "#145a32", textAlign: "center" },
 });

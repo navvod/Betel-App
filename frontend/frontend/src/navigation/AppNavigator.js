@@ -301,7 +301,16 @@ export default function AppNavigator() {
             })}
           >
             <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="QualityPrice" component={QualityPriceStackNavigator} />
+            <Tab.Screen
+              name="QualityPrice"
+              component={QualityPriceStackNavigator}
+              listeners={({ navigation }) => ({
+                tabPress: (e) => {
+                  e.preventDefault();
+                  navigation.navigate("QualityPrice", { screen: "QualityPriceHome" });
+                },
+              })}
+            />
             <Tab.Screen name="Disease" component={DiseaseStackNavigator} />
             <Tab.Screen
               name="VarietyCommercial"

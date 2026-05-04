@@ -20,6 +20,18 @@ export default function VarietyResultScreen({ route, navigation }) {
     }).start();
   }, []);
 
+  const sinhalaNames = {
+    Galdalu: "ගල්දලු",
+    Mahaneru: "මහනෙරු",
+  };
+
+  const getSinhalaName = () => {
+    for (const key of Object.keys(sinhalaNames)) {
+      if (type?.includes(key)) return sinhalaNames[key];
+    }
+    return "";
+  };
+
   // Variety Type Color Logic
   const getTypeColor = () => {
     if (type?.includes("Galdalu")) return "#27AE60"; // Green
@@ -56,7 +68,9 @@ Confidence   : ${confidencePercent}%
           {/* Type Badge */}
           <View style={[styles.typeBox, { backgroundColor: getTypeColor() + "20" }]}>
             <Text style={[styles.typeLabel, { color: getTypeColor() }]}>Detected Variety Type</Text>
-            <Text style={[styles.typeName, { color: getTypeColor() }]}>{type}</Text>
+            <Text style={[styles.typeName, { color: getTypeColor() }]}>
+              {type}{getSinhalaName() ? ` (${getSinhalaName()})` : ""}
+            </Text>
           </View>
 
           {/* Confidence Section */}

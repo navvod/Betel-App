@@ -20,6 +20,19 @@ export default function QualityResultScreen({ route, navigation }) {
     }).start();
   }, []);
 
+  const sinhalaNames = {
+    Premium: "කළු බුලත්",
+    Standard: "සාමාන්‍ය",
+    Poor: "දුර්වල",
+  };
+
+  const getSinhalaName = () => {
+    for (const key of Object.keys(sinhalaNames)) {
+      if (quality?.includes(key)) return sinhalaNames[key];
+    }
+    return "";
+  };
+
   // Quality Color Logic
   const getQualityColor = () => {
     if (quality?.includes("Premium")) return "#2ECC71"; // Green
@@ -57,7 +70,9 @@ Confidence    : ${confidencePercent}%
           {/* Quality Badge */}
           <View style={[styles.qualityBox, { backgroundColor: getQualityColor() + "20" }]}>
             <Text style={[styles.qualityLabel, { color: getQualityColor() }]}>Detected Quality</Text>
-            <Text style={[styles.qualityName, { color: getQualityColor() }]}>{quality}</Text>
+            <Text style={[styles.qualityName, { color: getQualityColor() }]}>
+              {quality}{getSinhalaName() ? ` (${getSinhalaName()})` : ""}
+            </Text>
           </View>
 
           {/* Confidence Section */}

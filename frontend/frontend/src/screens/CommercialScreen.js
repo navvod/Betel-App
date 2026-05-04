@@ -128,7 +128,7 @@ const ActionButton = ({ icon, label, onPress }) => (
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { padding: 20 },
+  content: { padding: 20, paddingBottom: 120 },
   header: { marginTop: -20, marginBottom: 20, alignItems: "center" },
   title: { fontSize: 32, fontWeight: "bold", color: "#eafaf1", marginBottom: 5 },
   subtitle: { fontSize: 14, color: "#c8f7dc", textAlign: "center" },
