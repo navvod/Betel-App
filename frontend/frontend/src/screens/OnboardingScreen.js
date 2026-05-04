@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Animated, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -50,38 +50,44 @@ export default function OnboardingScreen({ onComplete }) {
     <LinearGradient colors={["#0f3d2e", "#145a32"]} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
-          <View style={styles.iconContainer}>
-            {currentData.library === "MaterialCommunityIcons" ? (
-              <MaterialCommunityIcons name={currentData.icon} size={100} color="#9be7a6" />
-            ) : (
-              <Ionicons name={currentData.icon} size={100} color="#9be7a6" />
-            )}
-          </View>
-          
-          <Text style={styles.title}>{currentData.title}</Text>
-          <Text style={styles.description}>{currentData.description}</Text>
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.iconContainer}>
+              {currentData.library === "MaterialCommunityIcons" ? (
+                <MaterialCommunityIcons name={currentData.icon} size={100} color="#9be7a6" />
+              ) : (
+                <Ionicons name={currentData.icon} size={100} color="#9be7a6" />
+              )}
+            </View>
 
-          <View style={styles.tipsCard}>
-            <Text style={styles.tipsTitle}>ප්‍රවීණ උපදෙස්:</Text>
-            {currentData.tips.map((tip, index) => (
-              <View key={index} style={styles.tipItem}>
-                <Ionicons name="checkmark-circle" size={22} color="#1e8449" />
-                <Text style={styles.tipText}>{tip}</Text>
-              </View>
-            ))}
-          </View>
+            <Text style={styles.title}>{currentData.title}</Text>
+            <Text style={styles.description}>{currentData.description}</Text>
 
-          <View style={styles.pagination}>
-            {onboardingData.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.dot,
-                  currentIndex === index ? styles.activeDot : styles.inactiveDot,
-                ]}
-              />
-            ))}
-          </View>
+            <View style={styles.tipsCard}>
+              <Text style={styles.tipsTitle}>ප්‍රවීණ උපදෙස්:</Text>
+              {currentData.tips.map((tip, index) => (
+                <View key={index} style={styles.tipItem}>
+                  <Ionicons name="checkmark-circle" size={22} color="#1e8449" />
+                  <Text style={styles.tipText}>{tip}</Text>
+                </View>
+              ))}
+            </View>
+
+            <View style={styles.pagination}>
+              {onboardingData.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.dot,
+                    currentIndex === index ? styles.activeDot : styles.inactiveDot,
+                  ]}
+                />
+              ))}
+            </View>
+          </ScrollView>
 
           <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
             <Text style={styles.nextText}>
@@ -104,9 +110,18 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 25,
+    paddingHorizontal: 25,
+    paddingBottom: 25,
     alignItems: "center",
-    justifyContent: "center",
+  },
+  scrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  scrollContent: {
+    alignItems: "center",
+    paddingTop: 25,
+    paddingBottom: 10,
   },
   iconContainer: {
     marginBottom: 30,

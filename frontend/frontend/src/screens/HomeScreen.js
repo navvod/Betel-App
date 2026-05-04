@@ -60,9 +60,9 @@ export default function HomeScreen({ navigation }) {
                   <Ionicons name="volume-high" size={20} color="#fff" />
                 </TouchableOpacity>
                 {f.type === "MaterialCommunityIcons" ? (
-                  <MaterialCommunityIcons name={f.icon} size={32} color="#145a32" style={styles.icon} />
+                  <MaterialCommunityIcons name={f.icon} size={42} color="#145a32" style={styles.icon} />
                 ) : (
-                  <Ionicons name={f.icon} size={32} color="#145a32" style={styles.icon} />
+                  <Ionicons name={f.icon} size={42} color="#145a32" style={styles.icon} />
                 )}
                 <Text style={styles.cardTitle}>{f.title}</Text>
               </TouchableOpacity>
@@ -95,19 +95,29 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 100 },
   header: { marginBottom: 8 },
   welcome: { fontSize: 35, fontWeight: "bold", color: "#eafaf1" },
-  grid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", marginTop: 8, marginBottom: -100 },
+  grid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", marginTop: 8, marginBottom: -60 },
   card: {
     width: "48%",
     aspectRatio: 1,
     backgroundColor: "#eafaf1",
     borderRadius: 16,
-    padding: 14,
+    padding: 10,
     marginBottom: 12,
-    elevation: 3,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#9be7a6",
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderTopColor: "#c8f7dc",
+    borderLeftColor: "#c8f7dc",
+    borderBottomWidth: 6,
+    borderRightWidth: 6,
+    borderBottomColor: "#0a2d1e",
+    borderRightColor: "#0a2d1e",
+    elevation: 10,
+    shadowColor: "#0a2d1e",
+    shadowOffset: { width: 4, height: 6 },
+    shadowOpacity: 0.55,
+    shadowRadius: 6,
   },
   voiceBtn: {
     position: "absolute",
@@ -119,7 +129,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   icon: { marginBottom: 12 },
-  cardTitle: { fontSize: 20, fontWeight: "800", color: "#145a32", textAlign: "center" },
+  cardTitle: { fontSize: 23, fontWeight: "800", color: "#145a32", textAlign: "center" },
   recentHeader: { marginTop: 8, marginBottom: 6, alignItems: "flex-start" },
   recentTitle: { fontSize: 24, fontWeight: "800", color: "#eafaf1" },
   recentList: { gap: 10 },
